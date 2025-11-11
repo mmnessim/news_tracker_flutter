@@ -39,12 +39,17 @@ class SearchTerm extends StatelessWidget {
                 children: [
                   Icon(Icons.article, size: 18, color: Colors.black),
                   const SizedBox(width: 6),
-                  Text(
-                    term,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.black,
-                      decoration: TextDecoration.underline,
+                  Expanded(
+                    child: Text(
+                      term,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                        decoration: TextDecoration.underline,
+                      ),
+                      softWrap: true,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],

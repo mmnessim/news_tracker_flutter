@@ -15,6 +15,7 @@ import 'package:news_tracker/main.dart';
 import 'package:news_tracker/widgets/add_news_item.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
 import 'package:news_tracker/widgets/tracked_terms_list.dart';
+import 'package:news_tracker/utils/convert_date.dart';
 
 void main() {
   setUpAll(() async {
@@ -223,5 +224,11 @@ void main() {
     );
     await tester.pumpAndSettle();
     expect(find.textContaining('404'), findsNWidgets(2));
+  });
+
+  test('formatDate correctly formats date', () {
+    const isoDate = '2025-11-11';
+    final formatted = formatDate(isoDate);
+    expect(formatted, equals('November 11, 2025'));
   });
 }
