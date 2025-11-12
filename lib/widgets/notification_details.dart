@@ -34,7 +34,6 @@ class NotificationDetails extends StatelessWidget {
         }
 
         String scheduledText = 'Unknown';
-        String payloadData = '';
 
         if (pending.payload != null && pending.payload!.isNotEmpty) {
           try {
@@ -42,12 +41,8 @@ class NotificationDetails extends StatelessWidget {
             if (map is Map && map['scheduledAt'] is String) {
               scheduledText = _formatIso(map['scheduledAt']);
             }
-            if (map is Map && map['data'] != null) {
-              payloadData = map['data'].toString();
-            }
           } catch (_) {
-            // ignore JSON parse errors
-            payloadData = pending.payload!;
+            scheduledText = 'Invalid payload data';
           }
         }
         return Padding(
@@ -55,17 +50,6 @@ class NotificationDetails extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'ID: ${pending.id}',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-              const SizedBox(height: 8),
-              Text('Title: ${pending.title ?? ''}'),
-              const SizedBox(height: 8),
-              Text('Body: ${pending.body ?? ''}'),
-              const SizedBox(height: 8),
-              Text('Payload: $payloadData'),
-              const SizedBox(height: 12),
               Text(
                 'Scheduled for: $scheduledText',
                 style: const TextStyle(fontWeight: FontWeight.bold),
