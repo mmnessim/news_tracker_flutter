@@ -1,37 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:news_tracker/about.dart';
-import 'package:news_tracker/utils/initialize_notifications.dart';
+import 'package:news_tracker/utils/initialize_app.dart';
 import 'package:news_tracker/utils/preferences.dart';
 import 'package:news_tracker/utils/show_notification.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
-// import 'package:news_tracker/utils/show_notification.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:timezone/data/latest_all.dart' as tz;
-import 'package:timezone/timezone.dart' as tz;
 
 import 'widgets/add_news_item.dart';
 import 'widgets/page_body_container.dart';
 import 'widgets/tracked_terms_list.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
-
-Future<bool> initializeApp(GlobalKey<NavigatorState> navigatorKey) async {
-  await dotenv.load();
-  WidgetsFlutterBinding.ensureInitialized();
-  await initializeNotifications(navigatorKey);
-  tz.initializeTimeZones();
-  tz.setLocalLocation(tz.getLocation('America/New_York'));
-
-  var notificationPermission = await Permission.notification.status;
-  if (notificationPermission.isDenied) {
-    await Permission.notification.request();
-    return false;
-  } else if (notificationPermission.isPermanentlyDenied) {
-    return true;
-  }
-  return false;
-}
 
 /// Entry point for the News Tracker app.
 /// Loads environment variables and runs the app.
