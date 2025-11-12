@@ -53,11 +53,16 @@ class _TimePickerRowState extends State<TimePickerRow> {
             child: Text(
               'Notification time: ${_selectedTime.format(context)}',
               style: TextStyle(color: Colors.white),
+              softWrap: true,
+              overflow: TextOverflow.visible,
             ),
           ),
-          ElevatedButton(
-            onPressed: _setNotificationTime,
-            child: Text('Select Notification Time'),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: ElevatedButton(
+              onPressed: _setNotificationTime,
+              child: Text('Select Notification Time'),
+            ),
           ),
         ],
       ),
