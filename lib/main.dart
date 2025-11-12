@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:news_tracker/about.dart';
 import 'package:news_tracker/utils/initialize_notifications.dart';
 import 'package:news_tracker/utils/preferences.dart';
+import 'package:news_tracker/utils/show_notification.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
 // import 'package:news_tracker/utils/show_notification.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -13,10 +14,12 @@ import 'widgets/add_news_item.dart';
 import 'widgets/page_body_container.dart';
 import 'widgets/tracked_terms_list.dart';
 
-Future<bool> initializeApp() async {
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
+Future<bool> initializeApp(GlobalKey<NavigatorState> navigatorKey) async {
   await dotenv.load();
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeNotifications();
+  await initializeNotifications(navigatorKey);
   tz.initializeTimeZones();
   tz.setLocalLocation(tz.getLocation('America/New_York'));
 
@@ -33,7 +36,7 @@ Future<bool> initializeApp() async {
 /// Entry point for the News Tracker app.
 /// Loads environment variables and runs the app.
 Future<void> main() async {
-  bool showPermissionDialog = await initializeApp();
+  bool showPermissionDialog = await initializeApp(navigatorKey);
   runApp(MyApp(showPermissionDialog: showPermissionDialog));
 }
 
@@ -48,6 +51,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'News Tracker',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -117,11 +121,19 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   /// Adds a new search term and saves the updated list.
-  void _addSearchTerm(String term) {
+  void _addSearchTerm(String term) async {
     setState(() {
       _searchTerms.add(term);
     });
     saveSearchTerms(_searchTerms);
+    int index = _searchTerms.indexOf(term);
+    NotificationSpec spec = NotificationSpec(
+      id: index,
+      title: 'New results for $term',
+      body: 'Tap here to see new results',
+      payload: term,
+    );
+    await scheduleNotificationWithId(spec, null);
   }
 
   /// Removes a search term and saves the updated list.
@@ -181,16 +193,6 @@ class _MyHomePageState extends State<MyHomePage> {
               onButtonClicked: _removeSearchTerm,
             ),
           ),
-          // This button is just for testing notifications, will not be here long term
-          // ElevatedButton(
-          //   onPressed: () {
-          //     showNotification(
-          //       'scheduled notification',
-          //       'with flutter_local_notifications',
-          //     );
-          //   },
-          //   child: Text('test notification'),
-          // ),
           Padding(
             padding: const EdgeInsets.only(bottom: 32.0),
             child: AddNewsItem(onSearchTermAdded: _addSearchTerm),
