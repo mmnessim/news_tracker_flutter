@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:news_tracker/utils/initialize_notifications.dart';
@@ -61,6 +62,12 @@ Future<void> scheduleNotificationWithId(
 
   final _plugin = plugin ?? notificationsPlugin;
 
+  final payloadMap = <String, dynamic>{
+    if (notificationSpec.payload != null) 'data': notificationSpec.payload,
+    'scheduledAt': scheduled.toUtc().toIso8601String(),
+  };
+  final payloadJson = jsonEncode(payloadMap);
+
   await _plugin.zonedSchedule(
     notificationSpec.id,
     notificationSpec.title,
@@ -69,7 +76,7 @@ Future<void> scheduleNotificationWithId(
     details,
     androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     matchDateTimeComponents: notificationSpec.repeat ?? DateTimeComponents.time,
-    payload: notificationSpec.payload,
+    payload: payloadJson,
   );
 }
 
