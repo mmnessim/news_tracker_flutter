@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:news_tracker/model/news_response.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:news_tracker/utils/preferences.dart';
+import 'package:news_tracker/widgets/notification_details.dart';
 import 'package:news_tracker/widgets/page_body_container.dart';
 import 'widgets/article_tile.dart';
 
@@ -27,11 +29,22 @@ class _DetailsPageState extends State<DetailsPage> {
 
   /// API key for accessing the news service.
   final String _apiKey = dotenv.env['API_KEY'] ?? '';
+  int? _id;
 
   /// Initializes the state and fetches news articles.
   @override
   void initState() {
     super.initState();
+    _initAsync();
+  }
+
+  void _initAsync() async {
+    final terms = await loadSearchTerms();
+    print('loaded search terms');
+    setState(() {
+      _id = terms.indexOf(widget.term);
+      print('term id: $_id');
+    });
     fetchNews();
   }
 
@@ -104,6 +117,7 @@ class _DetailsPageState extends State<DetailsPage> {
       ),
       body: PageBodyContainer(
         children: [
+          if (_id != null) NotificationDetails(id: _id!),
           Text(getResultsText()),
           Expanded(child: buildResultsList()),
         ],

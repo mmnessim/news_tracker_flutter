@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:news_tracker/details.dart';
@@ -20,14 +22,19 @@ Future<void> initializeNotifications(
     android: androidSettings,
     iOS: DarwinInitializationSettings(),
   );
+
   await notificationsPlugin.initialize(
     settings,
     onDidReceiveNotificationResponse: (details) {
       final payload = details.payload;
       if (payload != null && payload.isNotEmpty) {
-        navigatorKey.currentState?.push(
-          MaterialPageRoute(builder: (_) => DetailsPage(term: payload)),
-        );
+        final map = jsonDecode(payload);
+        if (map is Map && map['data'] is String) {
+          final term = map['data'] as String;
+          navigatorKey.currentState?.push(
+            MaterialPageRoute(builder: (_) => DetailsPage(term: term)),
+          );
+        }
       }
     },
   );
@@ -36,11 +43,16 @@ Future<void> initializeNotifications(
   if (details != null && details.didNotificationLaunchApp) {
     final payload = details.notificationResponse?.payload;
     if (payload != null && payload.isNotEmpty) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        navigatorKey.currentState?.push(
-          MaterialPageRoute(builder: (_) => DetailsPage(term: payload)),
-        );
-      });
+      final map = jsonDecode(payload);
+      //print(map);
+      if (map is Map && map['data'] is String) {
+        final term = map['data'] as String;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          navigatorKey.currentState?.push(
+            MaterialPageRoute(builder: (_) => DetailsPage(term: term)),
+          );
+        });
+      }
     }
   }
   await notificationsPlugin
@@ -49,7 +61,6 @@ Future<void> initializeNotifications(
       >()
       ?.createNotificationChannel(channel);
 
-  // Request exact alarm permission for Android 12+ (required for zonedSchedule with exact timing)
   final androidImplementation = notificationsPlugin
       .resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin
