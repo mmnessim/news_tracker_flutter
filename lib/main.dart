@@ -3,6 +3,7 @@ import 'package:news_tracker/about.dart';
 import 'package:news_tracker/utils/initialize_app.dart';
 import 'package:news_tracker/utils/preferences.dart';
 import 'package:news_tracker/utils/show_notification.dart';
+import 'package:news_tracker/utils/tz_convert.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
 
 import 'widgets/add_news_item.dart';
@@ -103,6 +104,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _searchTerms.add(term);
     });
+    final time = await loadNotificationTime() ?? TimeOfDay.now();
     saveSearchTerms(_searchTerms);
     int index = _searchTerms.indexOf(term);
     NotificationSpec spec = NotificationSpec(
@@ -110,6 +112,8 @@ class _MyHomePageState extends State<MyHomePage> {
       title: 'New results for $term',
       body: 'Tap here to see new results',
       payload: term,
+      exactDate: timeOfDayToTzDateTime(time),
+      timeOfDay: time,
     );
     await scheduleNotificationWithId(spec, null);
   }
