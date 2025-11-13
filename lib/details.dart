@@ -28,7 +28,9 @@ class _DetailsPageState extends State<DetailsPage> {
   String _error = '';
 
   /// API key for accessing the news service.
-  final String _apiKey = dotenv.env['API_KEY'] ?? '';
+  final String _apiKey = dotenv.isInitialized
+      ? (dotenv.env['API_KEY'] ?? '')
+      : (const String.fromEnvironment('API_KEY', defaultValue: ''));
   int? _id;
 
   /// Initializes the state and fetches news articles.

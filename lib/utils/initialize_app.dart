@@ -6,7 +6,11 @@ import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 Future<bool> initializeApp(GlobalKey<NavigatorState> navigatorKey) async {
-  await dotenv.load();
+  try {
+    await dotenv.load();
+  } catch (_) {
+    print('No .env file found');
+  }
   WidgetsFlutterBinding.ensureInitialized();
   await initializeNotifications(navigatorKey);
   tz.initializeTimeZones();
