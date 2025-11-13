@@ -15,15 +15,15 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 /// Loads environment variables and runs the app.
 Future<void> main() async {
   bool showPermissionDialog = await initializeApp(navigatorKey);
-  runApp(MyApp(showPermissionDialog: showPermissionDialog));
+  runApp(NewsTracker(showPermissionDialog: showPermissionDialog));
 }
 
 /// The root widget for the News Tracker app.
-class MyApp extends StatelessWidget {
+class NewsTracker extends StatelessWidget {
   final bool showPermissionDialog;
 
   /// Creates the News Tracker app.
-  const MyApp({super.key, required this.showPermissionDialog});
+  const NewsTracker({super.key, required this.showPermissionDialog});
 
   /// Builds the MaterialApp with theme and home page.
   @override
