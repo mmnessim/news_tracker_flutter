@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:news_tracker/utils/initialize_notifications.dart';
-import 'package:news_tracker/utils/pending_notifications.dart';
+import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
+import 'package:news_tracker/utils/notifications/pending_notifications.dart';
 import 'package:news_tracker/utils/preferences.dart';
-import 'package:news_tracker/utils/show_notification.dart';
+import 'package:news_tracker/utils/notifications/show_notification.dart';
 import 'package:news_tracker/utils/tz_convert.dart';
 
 Future<void> rescheduleAllNotifications() async {

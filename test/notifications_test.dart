@@ -4,7 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
-import 'package:news_tracker/utils/show_notification.dart';
+import 'package:news_tracker/utils/notifications/show_notification.dart';
 
 class MockFlutterLocalNotificationsPlugin extends Mock
     implements FlutterLocalNotificationsPlugin {}

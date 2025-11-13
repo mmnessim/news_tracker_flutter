@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_tracker/utils/preferences.dart';
-import 'package:news_tracker/utils/reschedule_notifications.dart';
+import 'package:news_tracker/utils/notifications/reschedule_notifications.dart';
 
 class TimePickerRow extends StatefulWidget {
   const TimePickerRow({super.key, this.notificationTime});

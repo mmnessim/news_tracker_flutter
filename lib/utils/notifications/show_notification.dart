@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:news_tracker/utils/initialize_notifications.dart';
+import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
 import 'package:news_tracker/utils/preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
 

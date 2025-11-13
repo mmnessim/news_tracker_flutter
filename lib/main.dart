@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:news_tracker/about.dart';
 import 'package:news_tracker/utils/initialize_app.dart';
 import 'package:news_tracker/utils/preferences.dart';
-import 'package:news_tracker/utils/show_notification.dart';
+import 'package:news_tracker/utils/notifications/show_notification.dart';
 import 'package:news_tracker/utils/tz_convert.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
 
