@@ -45,26 +45,23 @@ class _TimePickerRowState extends State<TimePickerRow> {
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).colorScheme.primary,
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Text(
-              'Notification time: ${_selectedTime.format(context)}',
-              style: TextStyle(color: Colors.white),
-              softWrap: true,
-              overflow: TextOverflow.visible,
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+      child: InkWell(
+        onTap: _setNotificationTime,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Text(
+                'Notification time: ${_selectedTime.format(context)}',
+                style: TextStyle(color: Colors.white),
+                softWrap: true,
+                overflow: TextOverflow.visible,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: ElevatedButton(
-              onPressed: _setNotificationTime,
-              child: Text('Select Notification Time'),
-            ),
-          ),
-        ],
+            Icon(Icons.access_time_outlined, color: Colors.white),
+          ],
+        ),
       ),
     );
   }

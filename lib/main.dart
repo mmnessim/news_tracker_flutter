@@ -133,6 +133,21 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
         title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.access_time),
+            tooltip: 'Set Notification Time',
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: Text('Set Notification Time'),
+                  content: TimePickerRow(),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -168,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: PageBodyContainer(
         children: [
-          TimePickerRow(),
+          //TimePickerRow(),
           Expanded(
             child: TrackedTermsList(
               terms: _searchTerms,

@@ -43,7 +43,6 @@ class _AddNewsItemState extends State<AddNewsItem> {
               onPressed: _addSearchTerm,
               child: const Text("Track New Term"),
             ),
-            //SearchNowButton(),
           ],
         ),
       ],
