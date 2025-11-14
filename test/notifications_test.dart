@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:news_tracker/utils/notifications/notification_spec.dart';
 import 'package:news_tracker/utils/notifications/schedule_notifications.dart';
-import 'package:news_tracker/utils/notifications/show_notification.dart';
 import 'package:timezone/data/latest.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 

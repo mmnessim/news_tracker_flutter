@@ -132,8 +132,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void _removeSearchTerm(String term) {
     setState(() {
       _searchTerms.remove(term);
-      _termMap.remove(term);
+      _termMap.clear();
       _termCount--;
+      for (int i = 0; i < _searchTerms.length; i++) {
+        _termMap[_searchTerms[i]] = i;
+      }
     });
     saveSearchTerms(_searchTerms);
   }
@@ -200,6 +203,7 @@ class _MyHomePageState extends State<MyHomePage> {
           Expanded(
             child: TrackedTermsList(
               terms: _searchTerms,
+              termMap: _termMap,
               onButtonClicked: _removeSearchTerm,
             ),
           ),

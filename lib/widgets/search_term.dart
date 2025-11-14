@@ -7,6 +7,7 @@ class SearchTerm extends StatelessWidget {
   final double borderRadius;
   final Color? backgroundColor;
   final void Function()? onTap;
+  final int id;
 
   const SearchTerm({
     super.key,
@@ -16,6 +17,7 @@ class SearchTerm extends StatelessWidget {
     this.borderRadius = 12.0,
     this.backgroundColor,
     this.onTap,
+    required this.id,
   });
 
   @override
