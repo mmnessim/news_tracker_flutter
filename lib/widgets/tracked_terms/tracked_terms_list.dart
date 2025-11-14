@@ -35,7 +35,11 @@ class TrackedTermsList extends StatelessWidget {
               child: TrackedTermTile(
                 term: term,
                 id: termMap[term]!,
-                onButtonClicked: onButtonClicked,
+                removeSearchTerm: onButtonClicked,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 24.0,
+                ),
                 onTap: () {
                   Navigator.push(
                     context,

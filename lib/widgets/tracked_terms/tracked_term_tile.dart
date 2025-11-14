@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 
 class TrackedTermTile extends StatelessWidget {
   final String term;
-  final void Function(String) onButtonClicked;
+  final void Function(String) removeSearchTerm;
   final EdgeInsetsGeometry padding;
   final double borderRadius;
   final Color? backgroundColor;
@@ -15,7 +15,7 @@ class TrackedTermTile extends StatelessWidget {
   const TrackedTermTile({
     super.key,
     required this.term,
-    required this.onButtonClicked,
+    required this.removeSearchTerm,
     this.padding = const EdgeInsets.all(8.0),
     this.borderRadius = 12.0,
     this.backgroundColor,
@@ -36,6 +36,31 @@ class TrackedTermTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
+      onLongPress: () async {
+        showDialog(
+          context: context,
+          builder: (dialogContext) {
+            return AlertDialog(
+              title: const Text('Confirm'),
+              content: const Text('Delete this term?'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  // closes dialog
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(dialogContext).pop(); // close first
+                    removeSearchTerm(term); // then perform action
+                  },
+                  child: const Text('Delete term'),
+                ),
+              ],
+            );
+          },
+        );
+      },
       child: Container(
         width: double.infinity,
         padding: padding,
@@ -101,22 +126,6 @@ class TrackedTermTile extends StatelessWidget {
                   ],
                 );
               },
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(
-                    context,
-                  ).colorScheme.primaryContainer,
-                  foregroundColor: Colors.black,
-                ),
-                onPressed: () => onButtonClicked(term),
-                child: Text(
-                  '-',
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-              ),
             ),
           ],
         ),
