@@ -16,7 +16,14 @@ class DetailsPage extends StatefulWidget {
   final String term;
   final http.Client? client;
 
-  const DetailsPage({super.key, required this.term, this.client});
+  final Future<List<String>> Function()? searchTermsLoader;
+
+  const DetailsPage({
+    super.key,
+    required this.term,
+    this.client,
+    this.searchTermsLoader,
+  });
 
   @override
   State<DetailsPage> createState() => _DetailsPageState();
@@ -44,11 +51,12 @@ class _DetailsPageState extends State<DetailsPage> {
   }
 
   void _initAsync() async {
-    final terms = await loadSearchTerms();
-    print('loaded search terms');
+    final loader = widget.searchTermsLoader ?? loadSearchTerms;
+    final terms = await loader();
+    // print('loaded search terms');
     setState(() {
       _id = terms.indexOf(widget.term);
-      print('term id: $_id');
+      // print('term id: $_id');
     });
     fetchNews();
   }
