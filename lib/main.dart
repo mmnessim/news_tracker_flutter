@@ -69,6 +69,8 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   /// List of tracked search terms.
   final List<String> _searchTerms = [];
+  final Map<String, int> _termMap = {};
+  int _termCount = 0;
 
   /// Loads search terms from preferences when the widget is initialized.
   @override
@@ -93,9 +95,14 @@ class _MyHomePageState extends State<MyHomePage> {
         );
       });
     }
+
     loadSearchTerms().then((terms) {
       setState(() {
         _searchTerms.addAll(terms);
+        for (int i = 0; i < terms.length; i++) {
+          _termMap[terms[i]] = i;
+        }
+        _termCount = terms.length;
       });
     });
   }
@@ -104,6 +111,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void _addSearchTerm(String term) async {
     setState(() {
       _searchTerms.add(term);
+      _termMap[term] = _termCount;
+      _termCount++;
     });
     final time = await loadNotificationTime() ?? TimeOfDay.now();
     saveSearchTerms(_searchTerms);
@@ -123,6 +132,8 @@ class _MyHomePageState extends State<MyHomePage> {
   void _removeSearchTerm(String term) {
     setState(() {
       _searchTerms.remove(term);
+      _termMap.remove(term);
+      _termCount--;
     });
     saveSearchTerms(_searchTerms);
   }
@@ -185,6 +196,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: PageBodyContainer(
         children: [
           //TimePickerRow(),
+          Text('Term count: $_termCount'),
           Expanded(
             child: TrackedTermsList(
               terms: _searchTerms,
