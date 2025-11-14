@@ -1,16 +1,83 @@
-# flutter_application_1
+# News Tracker
 
-A new Flutter project.
+A Flutter application for tracking news articles based on user-defined search terms. It fetches the
+latest news from NewsAPI and sends notifications at scheduled times.
 
-## Getting Started
+# Under Construction!
 
-This project is a starting point for a Flutter application.
+This app is very much a work in progress and many core features are not yet implemented. It is also
+a learning project for me in Flutter. Some planned features include:
 
-A few resources to get you started if this is your first Flutter project:
+- Optional user authentication
+- Local persistence for users who don't want to make an account
+- Refactoring to use RSS feeds instead of NewsAPI
+- Notification options for each tracked term
+- Rebranding to focus on research instead of general news
+- Adding a Go backend to handle RSS, user authentication, and more
+- UI/UX improvements
+- Tests!
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Features
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Add and manage search terms for news tracking
+- Fetch and display news articles from NewsAPI
+- Schedule daily notifications for new results
+- View article details in a web browser
+- Persistent storage of search terms and notification preferences
+
+## Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/mmnessim/news_tracker_flutter.git
+   cd news_tracker_flutter
+   ```
+
+2. Install dependencies:
+   ```bash
+   flutter pub get
+   ```
+
+3. Set up environment variables:
+    - Create a `.env` file in the root directory
+    - Add your NewsAPI key: `API_KEY=your_api_key_here`
+
+4. Run the app:
+   ```bash
+   flutter run
+   ```
+
+## Usage
+
+- Add search terms to track specific news topics
+- Set notification time for daily updates
+- Tap on articles to view them in your browser
+- Long press on search terms to delete them
+
+## Dependencies
+
+- flutter_local_notifications: For scheduling notifications
+- http: For API requests
+- shared_preferences: For local storage
+- flutter_dotenv: For environment variables
+- url_launcher: For opening URLs
+- intl: For date/time formatting
+- timezone: For time zone handling
+- permission_handler: For managing permissions
+
+## Development
+
+Run tests:
+
+```bash
+flutter test
+```
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License.
+
