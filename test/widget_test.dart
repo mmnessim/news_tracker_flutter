@@ -5,10 +5,10 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:news_tracker/details.dart';
 import 'package:news_tracker/main.dart';
+import 'package:news_tracker/utils/format_date.dart';
 import 'package:news_tracker/widgets/add_news_item.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
 import 'package:news_tracker/widgets/tracked_terms_list.dart';
-import 'package:news_tracker/utils/convert_date.dart';
 
 void main() {
   setUpAll(() async {

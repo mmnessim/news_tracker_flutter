@@ -6,6 +6,7 @@ import 'search_term.dart';
 class TrackedTermsList extends StatelessWidget {
   final List<String> terms;
   final Function(String) onButtonClicked;
+
   const TrackedTermsList({
     super.key,
     required this.terms,

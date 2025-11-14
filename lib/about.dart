@@ -1,13 +1,15 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:news_tracker/model/news_response.dart';
 import 'package:news_tracker/utils/preferences.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:news_tracker/widgets/page_body_container.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
-import 'widgets/news_fetcher.dart';
+
 import 'widgets/article_tile.dart';
+import 'widgets/news_fetcher.dart';
 
 class AboutPage extends StatefulWidget {
   const AboutPage({super.key});

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:news_tracker/model/news_response.dart';
-import 'package:news_tracker/utils/convert_date.dart';
+import 'package:news_tracker/utils/format_date.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ArticleTile extends StatelessWidget {
   final Article article;
+
   const ArticleTile({super.key, required this.article});
 
   @override

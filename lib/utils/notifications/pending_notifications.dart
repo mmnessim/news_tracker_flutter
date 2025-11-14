@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+
 import 'initialize_notifications.dart';
 
 Future<List<PendingNotificationRequest>> getPendingNotifications() async {
@@ -12,4 +13,8 @@ Future<PendingNotificationRequest?> getNotificationById(int id) async {
   } catch (_) {
     return null;
   }
+}
+
+Future<void> cancelAllNotifications() async {
+  await notificationsPlugin.cancelAll();
 }
