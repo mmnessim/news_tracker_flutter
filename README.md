@@ -1,4 +1,5 @@
-# News Tracker
+# News Tracker 
+[![Codemagic build status](https://api.codemagic.io/apps/6910a0283b17a0cb13d03352/6910a0283b17a0cb13d03351/status_badge.svg)](https://codemagic.io/app/6910a0283b17a0cb13d03352/6910a0283b17a0cb13d03351/latest_build)
 
 A Flutter application for tracking news articles based on user-defined search terms. It fetches the
 latest news from NewsAPI and sends notifications at scheduled times.
