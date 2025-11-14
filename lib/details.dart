@@ -47,6 +47,11 @@ class _DetailsPageState extends State<DetailsPage> {
   @override
   void initState() {
     super.initState();
+    if (dotenv.isInitialized) {
+      print('API Key loaded from .env $_apiKey');
+    } else {
+      print('API Key loaded from compile-time environment variable $_apiKey');
+    }
     _initAsync();
   }
 
