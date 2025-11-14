@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_tracker/details.dart';
 
-import 'search_term.dart';
+import 'tracked_term_tile.dart';
 
 class TrackedTermsList extends StatelessWidget {
   final List<String> terms;
@@ -32,7 +32,7 @@ class TrackedTermsList extends StatelessWidget {
                 horizontal: 8.0,
                 vertical: 4.0,
               ),
-              child: SearchTerm(
+              child: TrackedTermTile(
                 term: term,
                 id: termMap[term]!,
                 onButtonClicked: onButtonClicked,

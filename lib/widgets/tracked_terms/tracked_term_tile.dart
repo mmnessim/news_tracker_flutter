@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:news_tracker/utils/notifications/pending_notifications.dart';
 import 'package:intl/intl.dart';
 
-class SearchTerm extends StatelessWidget {
+class TrackedTermTile extends StatelessWidget {
   final String term;
   final void Function(String) onButtonClicked;
   final EdgeInsetsGeometry padding;
@@ -12,7 +12,7 @@ class SearchTerm extends StatelessWidget {
   final void Function()? onTap;
   final int id;
 
-  const SearchTerm({
+  const TrackedTermTile({
     super.key,
     required this.term,
     required this.onButtonClicked,

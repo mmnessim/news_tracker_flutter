@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class AddNewsItem extends StatefulWidget {
+class AddTrackedTerm extends StatefulWidget {
   final void Function(String) onSearchTermAdded;
 
-  const AddNewsItem({super.key, required this.onSearchTermAdded});
+  const AddTrackedTerm({super.key, required this.onSearchTermAdded});
 
   @override
-  State<AddNewsItem> createState() => _AddNewsItemState();
+  State<AddTrackedTerm> createState() => _AddTrackedTermState();
 }
 
-class _AddNewsItemState extends State<AddNewsItem> {
+class _AddTrackedTermState extends State<AddTrackedTerm> {
   final TextEditingController _controller = TextEditingController();
 
   void _addSearchTerm() {

@@ -6,9 +6,9 @@ import 'package:http/testing.dart';
 import 'package:news_tracker/details.dart';
 import 'package:news_tracker/main.dart';
 import 'package:news_tracker/utils/format_date.dart';
-import 'package:news_tracker/widgets/add_news_item.dart';
+import 'package:news_tracker/widgets/tracked_terms/add_tracked_term.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
-import 'package:news_tracker/widgets/tracked_terms_list.dart';
+import 'package:news_tracker/widgets/tracked_terms/tracked_terms_list.dart';
 
 void main() {
   setUpAll(() async {
@@ -31,7 +31,7 @@ void main() {
       expect(find.byType(TrackedTermsList), findsOneWidget);
 
       // Check for AddNewsItem
-      expect(find.byType(AddNewsItem), findsOneWidget);
+      expect(find.byType(AddTrackedTerm), findsOneWidget);
 
       // Open drawer
       await tester.tap(find.byTooltip('Open navigation menu'));
@@ -50,6 +50,7 @@ void main() {
   );
 
   testWidgets('Add search term adds search term', (WidgetTester tester) async {
+    // TODO incorporate termMap properly
     List<String> terms = [];
     await tester.pumpWidget(
       MaterialApp(
@@ -58,7 +59,7 @@ void main() {
             builder: (context, setState) {
               return Column(
                 children: [
-                  AddNewsItem(
+                  AddTrackedTerm(
                     onSearchTermAdded: (term) {
                       setState(() {
                         terms.add(term);

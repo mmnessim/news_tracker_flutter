@@ -7,9 +7,9 @@ import 'package:news_tracker/utils/preferences.dart';
 import 'package:news_tracker/utils/tz_convert.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
 
-import 'widgets/add_news_item.dart';
+import 'widgets/tracked_terms/add_tracked_term.dart';
 import 'widgets/page_body_container.dart';
-import 'widgets/tracked_terms_list.dart';
+import 'widgets/tracked_terms/tracked_terms_list.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -209,7 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 32.0),
-            child: AddNewsItem(onSearchTermAdded: _addSearchTerm),
+            child: AddTrackedTerm(onSearchTermAdded: _addSearchTerm),
           ),
         ],
       ),
