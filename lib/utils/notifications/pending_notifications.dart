@@ -15,6 +15,9 @@ Future<PendingNotificationRequest?> getNotificationById(int id) async {
   }
 }
 
-Future<void> cancelAllNotifications() async {
-  await notificationsPlugin.cancelAll();
+Future<void> cancelAllNotifications(
+  FlutterLocalNotificationsPlugin? plugin,
+) async {
+  final _plugin = plugin ?? notificationsPlugin;
+  await _plugin.cancelAll();
 }

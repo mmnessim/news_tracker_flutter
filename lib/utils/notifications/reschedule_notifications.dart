@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
 import 'package:news_tracker/utils/notifications/pending_notifications.dart';
 import 'package:news_tracker/utils/notifications/schedule_notifications.dart';
@@ -42,9 +43,14 @@ Future<void> rescheduleAllNotifications() async {
   }
 }
 
-Future<void> clearAndRescheduleNotifications() async {
-  await cancelAllNotifications();
-  final terms = await loadSearchTerms();
+Future<void> clearAndRescheduleNotifications({
+  FlutterLocalNotificationsPlugin? plugin,
+  Future<List<String>> Function()? searchTermsLoader,
+}) async {
+  final _plugin = plugin ?? notificationsPlugin;
+  final loader = searchTermsLoader ?? loadSearchTerms;
+  await cancelAllNotifications(_plugin);
+  final terms = await loader();
   for (var term in terms) {
     final spec = NotificationSpec(
       id: terms.indexOf(term),
@@ -56,6 +62,6 @@ Future<void> clearAndRescheduleNotifications() async {
         await loadNotificationTime() ?? TimeOfDay.now(),
       ),
     );
-    await scheduleNotificationWithId(spec, notificationsPlugin);
+    await scheduleNotificationWithId(spec, _plugin);
   }
 }
