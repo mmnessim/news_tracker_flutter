@@ -94,36 +94,50 @@ class TrackedTermTile extends StatelessWidget {
                 ],
               ),
             ),
-            FutureBuilder(
-              future: getNotificationById(id),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                }
-                final pending = snapshot.data;
-                if (pending == null) {
-                  return const Center(child: Text('No notifications pending'));
-                }
-
-                String scheduledText = 'Unknown';
-
-                if (pending.payload != null && pending.payload!.isNotEmpty) {
-                  try {
-                    final map = jsonDecode(pending.payload!);
-                    if (map is Map && map['scheduledAt'] is String) {
-                      scheduledText = _formatIso(map['scheduledAt']);
+            StreamBuilder(
+              stream: notificationRescheduleStream.where(
+                (eventId) => eventId == id,
+              ),
+              builder: (context, asyncSnapshot) {
+                return FutureBuilder(
+                  future: getNotificationById(id),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('${snapshot.error}');
                     }
-                  } catch (_) {
-                    scheduledText = 'Invalid payload data';
-                  }
-                }
+                    final pending = snapshot.data;
+                    if (pending == null) {
+                      return const Center(
+                        child: Text('No notifications pending'),
+                      );
+                    }
 
-                return Row(
-                  children: [
-                    Icon(Icons.notifications, size: 18, color: Colors.black),
-                    const SizedBox(width: 4),
-                    Text(scheduledText),
-                  ],
+                    String scheduledText = 'Unknown';
+
+                    if (pending.payload != null &&
+                        pending.payload!.isNotEmpty) {
+                      try {
+                        final map = jsonDecode(pending.payload!);
+                        if (map is Map && map['scheduledAt'] is String) {
+                          scheduledText = _formatIso(map['scheduledAt']);
+                        }
+                      } catch (_) {
+                        scheduledText = 'Invalid payload data';
+                      }
+                    }
+
+                    return Row(
+                      children: [
+                        Icon(
+                          Icons.notifications,
+                          size: 18,
+                          color: Colors.black,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(scheduledText),
+                      ],
+                    );
+                  },
                 );
               },
             ),
