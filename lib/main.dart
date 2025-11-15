@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:news_tracker/about.dart';
 import 'package:news_tracker/utils/initialize_app.dart';
 import 'package:news_tracker/utils/notifications/notification_spec.dart';
+import 'package:news_tracker/utils/notifications/reschedule_notifications.dart';
 import 'package:news_tracker/utils/notifications/schedule_notifications.dart';
 import 'package:news_tracker/utils/preferences.dart';
 import 'package:news_tracker/utils/tz_convert.dart';
@@ -129,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   /// Removes a search term and saves the updated list.
-  void _removeSearchTerm(String term) {
+  void _removeSearchTerm(String term) async {
     setState(() {
       _searchTerms.remove(term);
       _termMap.clear();
@@ -138,7 +139,8 @@ class _MyHomePageState extends State<MyHomePage> {
         _termMap[_searchTerms[i]] = i;
       }
     });
-    saveSearchTerms(_searchTerms);
+    await saveSearchTerms(_searchTerms);
+    await clearAndRescheduleNotifications();
   }
 
   /// Builds the main UI for the home page, including the app bar, drawer, and body.
