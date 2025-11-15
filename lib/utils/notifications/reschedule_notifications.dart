@@ -62,7 +62,7 @@ Future<void> clearAndRescheduleNotifications({
         await loadNotificationTime() ?? TimeOfDay.now(),
       ),
     );
-    notifyNotificationReschedule(terms.indexOf(term));
+    // notifyNotificationReschedule(terms.indexOf(term));
     await scheduleNotificationWithId(spec, _plugin);
   }
 }
