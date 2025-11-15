@@ -7,6 +7,7 @@ import 'package:news_tracker/model/news_response.dart';
 import 'package:news_tracker/utils/preferences.dart';
 import 'package:news_tracker/widgets/page_body_container.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'widgets/article_tile.dart';
 import 'widgets/news_fetcher.dart';
@@ -19,12 +20,7 @@ class AboutPage extends StatefulWidget {
 }
 
 class _AboutPageState extends State<AboutPage> {
-  String _result = '';
   final List<String> _searchTerms = [];
-  NewsResponse? _jsonResponse;
-  String _error = '';
-  String? _activeTerm;
-  final String _apiKey = dotenv.env['API_KEY'] ?? '';
 
   @override
   void initState() {
@@ -36,36 +32,6 @@ class _AboutPageState extends State<AboutPage> {
     );
   }
 
-  Future<void> fetchData(String term) async {
-    setState(() {
-      _activeTerm = term; // Set the active term
-    });
-    final response = await http.get(
-      Uri.parse(
-        "https://newsapi.org/v2/everything?q=$term&sortBy=publishedAt&apiKey=$_apiKey",
-      ),
-      headers: {
-        'User-Agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36',
-        'Accept': 'application/json',
-      },
-    );
-
-    setState(() {
-      if (response.statusCode == 200) {
-        final Map<String, dynamic> jsonData = json.decode(response.body);
-        final newsResponse = NewsResponse.fromJson(jsonData);
-        _jsonResponse = NewsResponse(
-          status: newsResponse.status,
-          totalResults: newsResponse.totalResults,
-          articles: newsResponse.articles.take(100).toList(),
-        );
-      } else {
-        _error = 'Request failed with status: ${response.statusCode}';
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -73,49 +39,36 @@ class _AboutPageState extends State<AboutPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('About'),
       ),
-      body: PageBodyContainer(
-        children: [
-          TimePickerRow(),
-          Expanded(
-            child: _jsonResponse != null
-                ? ListView.builder(
-                    itemCount: _jsonResponse!.articles.length > 100
-                        ? 100
-                        : _jsonResponse!.articles.length,
-                    itemBuilder: (context, index) {
-                      return ArticleTile(
-                        article: _jsonResponse!.articles[index],
-                      );
-                    },
-                  )
-                : _error.isNotEmpty
-                ? Center(child: Text(_error))
-                : const Center(child: Text('No news loaded')),
-          ),
-          Expanded(
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                Text(
-                  "Tracked Terms:",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-                ),
-                ..._searchTerms.map(
-                  (term) => NewsFetcher(
-                    term: term,
-                    onButtonClicked: fetchData,
-                    isActive: term == _activeTerm,
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(_result),
-                ),
-              ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            TimePickerRow(),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                'News Tracker\n\n'
+                'Version 0.0.1\n\n'
+                'This app allows you to track specific search terms and receive daily notifications.'
+                'You can add or remove search terms, and view detailed articles for each term.\n\n'
+                'Written by Mounir Nessim.\n\n',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
             ),
-          ),
-        ],
+            const Spacer(),
+            InkWell(
+              onTap: () async {
+                await launchUrl(
+                  Uri.parse(
+                    'https://github.com/mmnessim/news_tracker_flutter.git',
+                  ),
+                );
+              },
+              child: Image.asset('assets/icon/github-mark.png', height: 32),
+            ),
+            const SizedBox(height: 16),
+          ],
+        ),
       ),
     );
   }
