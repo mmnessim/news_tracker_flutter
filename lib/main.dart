@@ -71,6 +71,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final List<String> _searchTerms = [];
   final Map<String, int> _termMap = {};
   int _termCount = 0;
+  int _refreshCount = 0;
 
   /// Loads search terms from preferences when the widget is initialized.
   @override
@@ -152,14 +153,17 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             icon: Icon(Icons.access_time),
             tooltip: 'Set Notification Time',
-            onPressed: () {
-              showDialog(
+            onPressed: () async {
+              await showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
                   title: Text('Set Notification Time'),
                   content: TimePickerRow(),
                 ),
               );
+              setState(() {
+                _refreshCount++;
+              });
             },
           ),
         ],
@@ -205,6 +209,7 @@ class _MyHomePageState extends State<MyHomePage> {
               terms: _searchTerms,
               termMap: _termMap,
               onButtonClicked: _removeSearchTerm,
+              refreshId: _refreshCount,
             ),
           ),
           Padding(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:news_tracker/utils/notifications/pending_notifications.dart';
 import 'package:intl/intl.dart';
 
-class TrackedTermTile extends StatelessWidget {
+class TrackedTermTile extends StatefulWidget {
   final String term;
   final void Function(String) removeSearchTerm;
   final EdgeInsetsGeometry padding;
@@ -11,6 +11,7 @@ class TrackedTermTile extends StatelessWidget {
   final Color? backgroundColor;
   final void Function()? onTap;
   final int id;
+  final int refreshId;
 
   const TrackedTermTile({
     super.key,
@@ -21,7 +22,15 @@ class TrackedTermTile extends StatelessWidget {
     this.backgroundColor,
     this.onTap,
     required this.id,
+    required this.refreshId,
   });
+
+  @override
+  State<TrackedTermTile> createState() => _TrackedTermTileState();
+}
+
+class _TrackedTermTileState extends State<TrackedTermTile> {
+  String scheduledText = '';
 
   String _formatIso(String iso) {
     try {
@@ -33,9 +42,47 @@ class TrackedTermTile extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _initAsync();
+  }
+
+  Future<void> _initAsync() async {
+    final pending = await getNotificationById(widget.id);
+    if (pending != null &&
+        pending.payload != null &&
+        pending.payload!.isNotEmpty) {
+      try {
+        final map = jsonDecode(pending.payload!);
+        if (map is Map && map['scheduledAt'] is String) {
+          setState(() {
+            scheduledText = _formatIso(map['scheduledAt']);
+          });
+        }
+      } catch (_) {
+        setState(() {
+          scheduledText = 'Invalid payload data';
+        });
+      }
+    } else {
+      setState(() {
+        scheduledText = 'No notifications pending';
+      });
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant TrackedTermTile oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.refreshId != widget.refreshId) {
+      _initAsync();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onTap,
+      onTap: widget.onTap,
       onLongPress: () async {
         showDialog(
           context: context,
@@ -52,7 +99,7 @@ class TrackedTermTile extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(dialogContext).pop(); // close first
-                    removeSearchTerm(term); // then perform action
+                    widget.removeSearchTerm(widget.term); // then perform action
                   },
                   child: const Text('Delete term'),
                 ),
@@ -63,12 +110,12 @@ class TrackedTermTile extends StatelessWidget {
       },
       child: Container(
         width: double.infinity,
-        padding: padding,
+        padding: widget.padding,
         decoration: BoxDecoration(
           color:
-              backgroundColor ??
+              widget.backgroundColor ??
               Theme.of(context).colorScheme.secondaryContainer,
-          borderRadius: BorderRadius.circular(borderRadius),
+          borderRadius: BorderRadius.circular(widget.borderRadius),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -80,7 +127,7 @@ class TrackedTermTile extends StatelessWidget {
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
-                      term,
+                      widget.term,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.black,
@@ -94,38 +141,12 @@ class TrackedTermTile extends StatelessWidget {
                 ],
               ),
             ),
-            FutureBuilder(
-              future: getNotificationById(id),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('${snapshot.error}');
-                }
-                final pending = snapshot.data;
-                if (pending == null) {
-                  return const Center(child: Text('No notifications pending'));
-                }
-
-                String scheduledText = 'Unknown';
-
-                if (pending.payload != null && pending.payload!.isNotEmpty) {
-                  try {
-                    final map = jsonDecode(pending.payload!);
-                    if (map is Map && map['scheduledAt'] is String) {
-                      scheduledText = _formatIso(map['scheduledAt']);
-                    }
-                  } catch (_) {
-                    scheduledText = 'Invalid payload data';
-                  }
-                }
-
-                return Row(
-                  children: [
-                    Icon(Icons.notifications, size: 18, color: Colors.black),
-                    const SizedBox(width: 4),
-                    Text(scheduledText),
-                  ],
-                );
-              },
+            Row(
+              children: [
+                Icon(Icons.notifications, size: 18, color: Colors.black),
+                const SizedBox(width: 4),
+                Text(scheduledText),
+              ],
             ),
           ],
         ),

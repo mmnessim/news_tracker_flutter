@@ -7,12 +7,14 @@ class TrackedTermsList extends StatelessWidget {
   final List<String> terms;
   final Map<String, int> termMap;
   final Function(String) onButtonClicked;
+  final int refreshId;
 
   const TrackedTermsList({
     super.key,
     required this.terms,
     required this.onButtonClicked,
     required this.termMap,
+    this.refreshId = 0,
   });
 
   @override
@@ -20,7 +22,7 @@ class TrackedTermsList extends StatelessWidget {
     if (terms.isEmpty) {
       return ListView(
         shrinkWrap: true,
-        children: [ListTile(title: Text('Add search terms below'))],
+        children: [const ListTile(title: Text('Add search terms below'))],
       );
     } else {
       return ListView(
@@ -49,6 +51,7 @@ class TrackedTermsList extends StatelessWidget {
                   );
                 },
                 backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                refreshId: refreshId,
               ),
             ),
           ),
