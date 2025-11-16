@@ -14,7 +14,7 @@ class ArticleTile extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey, width: 2.5),
-        borderRadius: BorderRadius.circular(8), // Optional: rounded corners
+        borderRadius: BorderRadius.circular(8),
       ),
       child: InkWell(
         onTap: () async {

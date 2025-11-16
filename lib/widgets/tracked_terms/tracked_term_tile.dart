@@ -1,7 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:news_tracker/utils/notifications/notification_spec.dart';
 import 'package:news_tracker/utils/notifications/pending_notifications.dart';
 import 'package:intl/intl.dart';
+import 'package:news_tracker/utils/notifications/schedule_notifications.dart';
+import 'package:news_tracker/utils/preferences.dart';
+import 'package:news_tracker/utils/tz_convert.dart';
 
 class TrackedTermTile extends StatelessWidget {
   final String term;
@@ -41,20 +45,19 @@ class TrackedTermTile extends StatelessWidget {
           context: context,
           builder: (dialogContext) {
             return AlertDialog(
-              title: const Text('Confirm'),
-              content: const Text('Delete this term?'),
+              title: Text('Manage "$term"'),
+              //content: const Text('Delete this term?'),
               actions: [
-                TextButton(
-                  onPressed: () => Navigator.of(dialogContext).pop(),
-                  // closes dialog
-                  child: const Text('Cancel'),
-                ),
                 ElevatedButton(
                   onPressed: () {
-                    Navigator.of(dialogContext).pop(); // close first
-                    removeSearchTerm(term); // then perform action
+                    Navigator.of(dialogContext).pop();
+                    removeSearchTerm(term);
                   },
                   child: const Text('Delete term'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(dialogContext).pop(),
+                  child: const Text('Cancel'),
                 ),
               ],
             );

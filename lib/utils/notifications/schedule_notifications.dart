@@ -35,6 +35,12 @@ Future<void> scheduleNotificationWithId(
   };
   final payloadJson = jsonEncode(payloadMap);
 
+  final pending = await _plugin.pendingNotificationRequests();
+  final alreadyScheduled = pending.any((n) => n.id == notificationSpec.id);
+  if (alreadyScheduled) {
+    await _plugin.cancel(notificationSpec.id);
+  }
+
   await _plugin.zonedSchedule(
     notificationSpec.id,
     notificationSpec.title,
