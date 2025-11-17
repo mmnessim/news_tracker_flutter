@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_tracker/about.dart';
+import 'package:news_tracker/data/database/db_init.dart';
 import 'package:news_tracker/utils/initialize_app.dart';
 import 'package:news_tracker/utils/notifications/notification_spec.dart';
 import 'package:news_tracker/utils/notifications/reschedule_notifications.dart';
@@ -18,6 +19,7 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 /// Loads environment variables and runs the app.
 Future<void> main() async {
   bool showPermissionDialog = await initializeApp(navigatorKey);
+  final db = AppDatabase.instance;
   runApp(NewsTracker(showPermissionDialog: showPermissionDialog));
 }
 
