@@ -14,12 +14,12 @@ import 'widgets/page_body_container.dart';
 import 'widgets/tracked_terms/tracked_terms_list.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+final db = AppDatabase.instance;
 
 /// Entry point for the News Tracker app.
 /// Loads environment variables and runs the app.
 Future<void> main() async {
   bool showPermissionDialog = await initializeApp(navigatorKey);
-  final db = AppDatabase.instance;
   runApp(NewsTracker(showPermissionDialog: showPermissionDialog));
 }
 
@@ -86,7 +86,9 @@ class _MyHomePageState extends State<MyHomePage> {
           builder: (context) => AlertDialog(
             title: Text('Notification Permission'),
             content: Text(
-              'Notification permission is permanently denied. NewsTracker will not work properly without notification permission. Visit your phone\'s Settings -> Apps -> NewsTracker -> Permissions to enable',
+              '''Notification permission is permanently denied. 
+              NewsTracker will not work properly without notification permission. 
+              Visit your phone\'s Settings -> Apps -> NewsTracker -> Permissions to enable''',
             ),
             actions: [
               TextButton(

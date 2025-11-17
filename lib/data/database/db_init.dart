@@ -43,4 +43,23 @@ class AppDatabase {
     if (_database == null) return;
     _database!.close();
   }
+
+  Future<int> insert(int id, String term, bool locked) async {
+    final db = await database;
+    return await db.insert(table, {
+      columnId: id,
+      columnTerm: term,
+      columnLocked: locked ? 1 : 0,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  Future<int> delete(int id) async {
+    final db = await database;
+    return await db.delete(table, where: 'id = ?', whereArgs: [id]);
+  }
+
+  Future<List<Map<String, Object?>>> getAll() async {
+    final db = await database;
+    return await db.query(table);
+  }
 }
