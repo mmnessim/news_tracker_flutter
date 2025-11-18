@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/details.dart';
+import 'package:news_tracker/providers/tracked_term_provider.dart';
 
 import 'tracked_term_tile.dart';
 
-class TrackedTermsList extends StatelessWidget {
-  final List<String> terms;
-  final Function(String) onButtonClicked;
-
-  const TrackedTermsList({
-    super.key,
-    required this.terms,
-    required this.onButtonClicked,
-  });
+class TrackedTermsList extends ConsumerWidget {
+  const TrackedTermsList({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final terms = ref.watch(trackedTermsProvider);
+
     if (terms.isEmpty) {
       return ListView(
         shrinkWrap: true,
@@ -33,7 +30,6 @@ class TrackedTermsList extends StatelessWidget {
               child: TrackedTermTile(
                 term: term,
                 id: terms.indexOf(term),
-                removeSearchTerm: onButtonClicked,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16.0,
                   vertical: 24.0,

@@ -1,15 +1,13 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:news_tracker/utils/notifications/notification_spec.dart';
-import 'package:news_tracker/utils/notifications/pending_notifications.dart';
-import 'package:intl/intl.dart';
-import 'package:news_tracker/utils/notifications/schedule_notifications.dart';
-import 'package:news_tracker/utils/preferences.dart';
-import 'package:news_tracker/utils/tz_convert.dart';
 
-class TrackedTermTile extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:news_tracker/providers/tracked_term_provider.dart';
+import 'package:news_tracker/utils/notifications/pending_notifications.dart';
+
+class TrackedTermTile extends ConsumerWidget {
   final String term;
-  final void Function(String) removeSearchTerm;
   final EdgeInsetsGeometry padding;
   final double borderRadius;
   final Color? backgroundColor;
@@ -19,7 +17,6 @@ class TrackedTermTile extends StatelessWidget {
   const TrackedTermTile({
     super.key,
     required this.term,
-    required this.removeSearchTerm,
     this.padding = const EdgeInsets.all(8.0),
     this.borderRadius = 12.0,
     this.backgroundColor,
@@ -37,7 +34,7 @@ class TrackedTermTile extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return InkWell(
       onTap: onTap,
       onLongPress: () async {
@@ -51,7 +48,7 @@ class TrackedTermTile extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(dialogContext).pop();
-                    removeSearchTerm(term);
+                    ref.read(trackedTermsProvider.notifier).remove(term);
                   },
                   child: const Text('Delete term'),
                 ),

@@ -134,14 +134,7 @@ class MyHomePage extends ConsumerWidget {
       body: PageBodyContainer(
         children: [
           Text('Term count: $termCount'),
-          Expanded(
-            child: TrackedTermsList(
-              terms: terms,
-              onButtonClicked: (String t) {
-                ref.read(trackedTermsProvider.notifier).remove(t);
-              },
-            ),
-          ),
+          Expanded(child: TrackedTermsList()),
           Padding(
             padding: const EdgeInsets.only(bottom: 32.0),
             child: AddTrackedTerm(
