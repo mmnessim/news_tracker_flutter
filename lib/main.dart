@@ -142,11 +142,7 @@ class MyHomePage extends ConsumerWidget {
           Expanded(child: TrackedTermsList()),
           Padding(
             padding: const EdgeInsets.only(bottom: 32.0),
-            child: AddTrackedTerm(
-              onSearchTermAdded: (String t) {
-                ref.read(trackedTermsProvider.notifier).add(t);
-              },
-            ),
+            child: AddTrackedTerm(),
           ),
         ],
       ),
