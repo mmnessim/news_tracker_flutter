@@ -5,14 +5,12 @@ import 'tracked_term_tile.dart';
 
 class TrackedTermsList extends StatelessWidget {
   final List<String> terms;
-  final Map<String, int> termMap;
   final Function(String) onButtonClicked;
 
   const TrackedTermsList({
     super.key,
     required this.terms,
     required this.onButtonClicked,
-    required this.termMap,
   });
 
   @override
@@ -34,7 +32,7 @@ class TrackedTermsList extends StatelessWidget {
               ),
               child: TrackedTermTile(
                 term: term,
-                id: termMap[term]!,
+                id: terms.indexOf(term),
                 removeSearchTerm: onButtonClicked,
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16.0,

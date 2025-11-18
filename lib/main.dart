@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/about.dart';
+import 'package:news_tracker/providers/tracked_term_provider.dart';
 import 'package:news_tracker/utils/initialize_app.dart';
 import 'package:news_tracker/utils/notifications/notification_spec.dart';
 import 'package:news_tracker/utils/notifications/reschedule_notifications.dart';
@@ -7,6 +9,7 @@ import 'package:news_tracker/utils/notifications/schedule_notifications.dart';
 import 'package:news_tracker/utils/preferences.dart';
 import 'package:news_tracker/utils/tz_convert.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
+import 'package:news_tracker/widgets/tracked_terms/tracked_term_tile.dart';
 
 import 'widgets/tracked_terms/add_tracked_term.dart';
 import 'widgets/page_body_container.dart';
@@ -18,7 +21,11 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 /// Loads environment variables and runs the app.
 Future<void> main() async {
   bool showPermissionDialog = await initializeApp(navigatorKey);
-  runApp(NewsTracker(showPermissionDialog: showPermissionDialog));
+  runApp(
+    ProviderScope(
+      child: NewsTracker(showPermissionDialog: showPermissionDialog),
+    ),
+  );
 }
 
 /// The root widget for the News Tracker app.
@@ -41,43 +48,24 @@ class NewsTracker extends StatelessWidget {
         ),
       ),
       home: MyHomePage(
-        title: 'News Tracker',
+        //title: 'News Tracker',
         showPermissionDialog: showPermissionDialog,
       ),
     );
   }
 }
 
-/// The main home page for News Tracker.
-class MyHomePage extends StatefulWidget {
-  /// The title displayed in the app bar.
-  final String title;
+class MyHomePage extends ConsumerWidget {
   final bool showPermissionDialog;
 
-  /// Creates the home page.
-  const MyHomePage({
-    super.key,
-    required this.title,
-    required this.showPermissionDialog,
-  });
+  const MyHomePage({required this.showPermissionDialog});
 
-  /// Creates the mutable state for this widget.
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final terms = ref.watch(trackedTermsProvider);
+    final termCount = terms.length;
 
-/// State for [MyHomePage].
-class _MyHomePageState extends State<MyHomePage> {
-  /// List of tracked search terms.
-  final List<String> _searchTerms = [];
-  final Map<String, int> _termMap = {};
-  int _termCount = 0;
-
-  /// Loads search terms from preferences when the widget is initialized.
-  @override
-  void initState() {
-    super.initState();
-    if (widget.showPermissionDialog) {
+    if (showPermissionDialog) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
           context: context,
@@ -97,59 +85,10 @@ class _MyHomePageState extends State<MyHomePage> {
       });
     }
 
-    loadSearchTerms().then((terms) {
-      setState(() {
-        _searchTerms.addAll(terms);
-        for (int i = 0; i < terms.length; i++) {
-          _termMap[terms[i]] = i;
-        }
-        _termCount = terms.length;
-      });
-    });
-  }
-
-  /// Adds a new search term and saves the updated list.
-  void _addSearchTerm(String term) async {
-    setState(() {
-      _searchTerms.add(term);
-      _termMap[term] = _termCount;
-      _termCount++;
-    });
-    final time = await loadNotificationTime() ?? TimeOfDay.now();
-    saveSearchTerms(_searchTerms);
-    int index = _searchTerms.indexOf(term);
-    NotificationSpec spec = NotificationSpec(
-      id: index,
-      title: 'New results for $term',
-      body: 'Tap here to see new results',
-      payload: term,
-      exactDate: timeOfDayToTzDateTime(time),
-      timeOfDay: time,
-    );
-    await scheduleNotificationWithId(spec, null);
-  }
-
-  /// Removes a search term and saves the updated list.
-  void _removeSearchTerm(String term) async {
-    setState(() {
-      _searchTerms.remove(term);
-      _termMap.clear();
-      _termCount--;
-      for (int i = 0; i < _searchTerms.length; i++) {
-        _termMap[_searchTerms[i]] = i;
-      }
-    });
-    await saveSearchTerms(_searchTerms);
-    await clearAndRescheduleNotifications();
-  }
-
-  /// Builds the main UI for the home page, including the app bar, drawer, and body.
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        title: Text(widget.title),
+        title: Text('News Tracker'),
         actions: [
           IconButton(
             icon: Icon(Icons.access_time),
@@ -200,21 +139,199 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: PageBodyContainer(
         children: [
-          //TimePickerRow(),
-          Text('Term count: $_termCount'),
+          Text('Term count: $termCount'),
           Expanded(
             child: TrackedTermsList(
-              terms: _searchTerms,
-              termMap: _termMap,
-              onButtonClicked: _removeSearchTerm,
+              terms: terms,
+              onButtonClicked: (String t) {
+                ref.read(trackedTermsProvider.notifier).remove(t);
+              },
             ),
           ),
           Padding(
             padding: const EdgeInsets.only(bottom: 32.0),
-            child: AddTrackedTerm(onSearchTermAdded: _addSearchTerm),
+            child: AddTrackedTerm(
+              onSearchTermAdded: (String t) {
+                ref.read(trackedTermsProvider.notifier).add(t);
+              },
+            ),
           ),
         ],
       ),
     );
   }
 }
+
+// TODO: verify that Riverpod implementation
+
+// /// The main home page for News Tracker.
+// class MyHomePage extends StatefulWidget {
+//   /// The title displayed in the app bar.
+//   final String title;
+//   final bool showPermissionDialog;
+//
+//   /// Creates the home page.
+//   const MyHomePage({
+//     super.key,
+//     required this.title,
+//     required this.showPermissionDialog,
+//   });
+//
+//   /// Creates the mutable state for this widget.
+//   @override
+//   State<MyHomePage> createState() => _MyHomePageState();
+// }
+//
+// /// State for [MyHomePage].
+// class _MyHomePageState extends State<MyHomePage> {
+//   /// List of tracked search terms.
+//   final List<String> _searchTerms = [];
+//   final Map<String, int> _termMap = {};
+//   int _termCount = 0;
+//
+//   /// Loads search terms from preferences when the widget is initialized.
+//   @override
+//   void initState() {
+//     super.initState();
+//     if (widget.showPermissionDialog) {
+//       WidgetsBinding.instance.addPostFrameCallback((_) {
+//         showDialog(
+//           context: context,
+//           builder: (context) => AlertDialog(
+//             title: Text('Notification Permission'),
+//             content: Text(
+//               'Notification permission is permanently denied. NewsTracker will not work properly without notification permission. Visit your phone\'s Settings -> Apps -> NewsTracker -> Permissions to enable',
+//             ),
+//             actions: [
+//               TextButton(
+//                 onPressed: () => Navigator.of(context).pop(),
+//                 child: Text('OK'),
+//               ),
+//             ],
+//           ),
+//         );
+//       });
+//     }
+//
+//     loadSearchTerms().then((terms) {
+//       setState(() {
+//         _searchTerms.addAll(terms);
+//         for (int i = 0; i < terms.length; i++) {
+//           _termMap[terms[i]] = i;
+//         }
+//         _termCount = terms.length;
+//       });
+//     });
+//   }
+//
+//   /// Adds a new search term and saves the updated list.
+//   void _addSearchTerm(String term) async {
+//     setState(() {
+//       _searchTerms.add(term);
+//       _termMap[term] = _termCount;
+//       _termCount++;
+//     });
+//     final time = await loadNotificationTime() ?? TimeOfDay.now();
+//     saveSearchTerms(_searchTerms);
+//     int index = _searchTerms.indexOf(term);
+//     NotificationSpec spec = NotificationSpec(
+//       id: index,
+//       title: 'New results for $term',
+//       body: 'Tap here to see new results',
+//       payload: term,
+//       exactDate: timeOfDayToTzDateTime(time),
+//       timeOfDay: time,
+//     );
+//     await scheduleNotificationWithId(spec, null);
+//   }
+//
+//   /// Removes a search term and saves the updated list.
+//   void _removeSearchTerm(String term) async {
+//     setState(() {
+//       _searchTerms.remove(term);
+//       _termMap.clear();
+//       _termCount--;
+//       for (int i = 0; i < _searchTerms.length; i++) {
+//         _termMap[_searchTerms[i]] = i;
+//       }
+//     });
+//     await saveSearchTerms(_searchTerms);
+//     await clearAndRescheduleNotifications();
+//   }
+//
+//   /// Builds the main UI for the home page, including the app bar, drawer, and body.
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         backgroundColor: Theme.of(context).colorScheme.surface,
+//         title: Text(widget.title),
+//         actions: [
+//           IconButton(
+//             icon: Icon(Icons.access_time),
+//             tooltip: 'Set Notification Time',
+//             onPressed: () {
+//               showDialog(
+//                 context: context,
+//                 builder: (context) => AlertDialog(
+//                   title: Text('Set Notification Time'),
+//                   content: TimePickerRow(),
+//                 ),
+//               );
+//             },
+//           ),
+//         ],
+//       ),
+//       drawer: Drawer(
+//         child: ListView(
+//           padding: EdgeInsets.zero,
+//           children: [
+//             DrawerHeader(
+//               decoration: BoxDecoration(
+//                 color: Theme.of(context).colorScheme.primary,
+//               ),
+//               child: Text(
+//                 'Menu',
+//                 style: TextStyle(color: Colors.white, fontSize: 24),
+//               ),
+//             ),
+//             ListTile(
+//               title: Text('Home'),
+//               onTap: () {
+//                 Navigator.pop(context);
+//               },
+//             ),
+//             ListTile(
+//               title: Text('About'),
+//               onTap: () {
+//                 Navigator.pop(context);
+//                 Navigator.push(
+//                   context,
+//                   MaterialPageRoute(builder: (context) => AboutPage()),
+//                 );
+//               },
+//             ),
+//           ],
+//         ),
+//       ),
+//       body: PageBodyContainer(
+//         children: [
+//           //TimePickerRow(),
+//           //RiverpodHomePage(showPermissionDialog: widget.showPermissionDialog),
+//           Text('Term count: $_termCount'),
+//           Expanded(
+//             child: TrackedTermsList(
+//               terms: _searchTerms,
+//               // termMap: _termMap,
+//               onButtonClicked: _removeSearchTerm,
+//             ),
+//           ),
+//           Padding(
+//             padding: const EdgeInsets.only(bottom: 32.0),
+//             child: AddTrackedTerm(onSearchTermAdded: _addSearchTerm),
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
