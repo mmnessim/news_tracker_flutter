@@ -10,44 +10,52 @@ class TrackedTermsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final terms = ref.watch(trackedTermsProvider);
+    final termsAsync = ref.watch(trackedTermsProvider);
 
-    if (terms.isEmpty) {
-      return ListView(
-        shrinkWrap: true,
-        children: [ListTile(title: Text('Add search terms below'))],
-      );
-    } else {
-      return ListView(
-        shrinkWrap: true,
-        children: [
-          ...terms.map(
-            (term) => Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 8.0,
-                vertical: 4.0,
-              ),
-              child: TrackedTermTile(
-                term: term,
-                id: terms.indexOf(term),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16.0,
-                  vertical: 24.0,
-                ),
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => DetailsPage(term: term),
+    return termsAsync.when(
+      data: (terms) {
+        if (terms.isEmpty) {
+          return ListView(
+            shrinkWrap: true,
+            children: [ListTile(title: Text('Add search terms below'))],
+          );
+        } else {
+          return ListView(
+            shrinkWrap: true,
+            children: [
+              ...terms.map(
+                (term) => Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                    vertical: 4.0,
+                  ),
+                  child: TrackedTermTile(
+                    term: term,
+                    id: terms.indexOf(term),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 24.0,
                     ),
-                  );
-                },
-                backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetailsPage(term: term),
+                        ),
+                      );
+                    },
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.primaryContainer,
+                  ),
+                ),
               ),
-            ),
-          ),
-        ],
-      );
-    }
+            ],
+          );
+        }
+      },
+      loading: () => CircularProgressIndicator(),
+      error: (err, stack) => Text('Error $err'),
+    );
   }
 }

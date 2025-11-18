@@ -56,8 +56,13 @@ class MyHomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final terms = ref.watch(trackedTermsProvider);
-    final termCount = terms.length;
+    final termsAsync = ref.watch(trackedTermsProvider);
+
+    final termsCount = termsAsync.when(
+      data: (terms) => terms.length,
+      loading: () => 0,
+      error: (_, _) => 0,
+    );
 
     if (showPermissionDialog) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -133,7 +138,7 @@ class MyHomePage extends ConsumerWidget {
       ),
       body: PageBodyContainer(
         children: [
-          Text('Term count: $termCount'),
+          Text('Term count: $termsCount'),
           Expanded(child: TrackedTermsList()),
           Padding(
             padding: const EdgeInsets.only(bottom: 32.0),
