@@ -7,6 +7,9 @@ class NotificationTimeNotifier extends AsyncNotifier<TimeOfDay?> {
   @override
   Future<TimeOfDay?> build() async {
     final time = await loadNotificationTime();
+    if (time == null) {
+      return TimeOfDay.now();
+    }
     return time;
   }
 
