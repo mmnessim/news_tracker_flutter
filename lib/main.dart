@@ -3,16 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/about.dart';
 import 'package:news_tracker/providers/tracked_term_provider.dart';
 import 'package:news_tracker/utils/initialize_app.dart';
-import 'package:news_tracker/utils/notifications/notification_spec.dart';
-import 'package:news_tracker/utils/notifications/reschedule_notifications.dart';
-import 'package:news_tracker/utils/notifications/schedule_notifications.dart';
-import 'package:news_tracker/utils/preferences.dart';
-import 'package:news_tracker/utils/tz_convert.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
-import 'package:news_tracker/widgets/tracked_terms/tracked_term_tile.dart';
 
-import 'widgets/tracked_terms/add_tracked_term.dart';
 import 'widgets/page_body_container.dart';
+import 'widgets/tracked_terms/add_tracked_term.dart';
 import 'widgets/tracked_terms/tracked_terms_list.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
