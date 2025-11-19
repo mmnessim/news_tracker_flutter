@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:news_tracker/about.dart';
+import 'package:news_tracker/views/about.dart';
 import 'package:news_tracker/providers/tracked_term_provider.dart';
 import 'package:news_tracker/utils/initialize_app.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
@@ -139,11 +139,11 @@ class MyHomePage extends ConsumerWidget {
       body: PageBodyContainer(
         children: [
           Text('Term count: $termsCount'),
-          Expanded(child: TrackedTermsList()),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 32.0),
-            child: AddTrackedTerm(),
-          ),
+          Expanded(child: BTrackedTermsList()),
+          // Padding(
+          //   padding: const EdgeInsets.only(bottom: 32.0),
+          //   child: AddTrackedTerm(),
+          // ),
         ],
       ),
     );

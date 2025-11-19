@@ -4,7 +4,7 @@ import 'package:news_tracker/model/news_response.dart';
 import 'package:news_tracker/providers/news_helper.dart';
 import 'package:news_tracker/widgets/page_body_container.dart';
 
-import 'widgets/article_tile.dart';
+import '../widgets/article_tile.dart';
 
 class DetailsPage extends ConsumerWidget {
   final String term;

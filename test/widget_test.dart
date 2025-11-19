@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
-import 'package:news_tracker/details.dart';
+import 'package:news_tracker/views/details.dart';
 import 'package:news_tracker/main.dart';
 import 'package:news_tracker/utils/format_date.dart';
 import 'package:news_tracker/widgets/tracked_terms/add_tracked_term.dart';

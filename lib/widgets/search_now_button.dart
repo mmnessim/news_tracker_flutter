@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:news_tracker/about.dart';
+import 'package:news_tracker/views/about.dart';
 
 class SearchNowButton extends StatelessWidget {
   const SearchNowButton({super.key});
