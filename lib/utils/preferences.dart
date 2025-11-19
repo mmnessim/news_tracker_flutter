@@ -20,6 +20,7 @@ Future<void> saveNotificationTime(TimeOfDay notificationTime) async {
 Future<TimeOfDay?> loadNotificationTime() async {
   final prefs = await SharedPreferences.getInstance();
   final timeString = prefs.getString('notificationTime');
+  
   if (timeString == null) return null;
   final parts = timeString.split(':');
   return TimeOfDay(hour: int.parse(parts[0]), minute: int.parse(parts[1]));

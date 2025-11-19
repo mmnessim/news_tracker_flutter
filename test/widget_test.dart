@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -12,13 +13,15 @@ import 'package:news_tracker/widgets/tracked_terms/tracked_terms_list.dart';
 
 void main() {
   setUpAll(() async {
-    await dotenv.load(fileName: '.env');
+    //await dotenv.load(fileName: '.env');
   });
 
   testWidgets(
     'MyApp home page renders core widgets and drawer navigation works',
     (WidgetTester tester) async {
-      await tester.pumpWidget(const NewsTracker(showPermissionDialog: false));
+      await tester.pumpWidget(
+        ProviderScope(child: const NewsTracker(showPermissionDialog: false)),
+      );
       await tester.pumpAndSettle();
 
       // Check for app bar title
@@ -46,28 +49,30 @@ void main() {
     Map<String, int> termMap = {};
     List<String> terms = [];
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: StatefulBuilder(
-            builder: (context, setState) {
-              return Column(
-                children: [
-                  AddTrackedTerm(
-                    onSearchTermAdded: (term) {
-                      setState(() {
-                        terms.add(term);
-                        termMap[term] = terms.length - 1;
-                      });
-                    },
-                  ),
-                  TrackedTermsList(
-                    terms: terms,
-                    termMap: termMap,
-                    onButtonClicked: (_) {}, // No-op for test
-                  ),
-                ],
-              );
-            },
+      ProviderScope(
+        child: MaterialApp(
+          home: Scaffold(
+            body: StatefulBuilder(
+              builder: (context, setState) {
+                return Column(
+                  children: [
+                    AddTrackedTerm(
+                      onSearchTermAdded: (term) {
+                        setState(() {
+                          terms.add(term);
+                          termMap[term] = terms.length - 1;
+                        });
+                      },
+                    ),
+                    TrackedTermsList(
+                      terms: terms,
+                      // termMap: termMap,
+                      onButtonClicked: (_) {}, // No-op for test
+                    ),
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
@@ -122,7 +127,9 @@ void main() {
   testWidgets('Shows permission dialog when permission is denied', (
     WidgetTester tester,
   ) async {
-    await tester.pumpWidget(const NewsTracker(showPermissionDialog: true));
+    await tester.pumpWidget(
+      ProviderScope(child: const NewsTracker(showPermissionDialog: true)),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('Notification Permission'), findsOneWidget);
@@ -136,7 +143,9 @@ void main() {
   });
 
   testWidgets('Drawer navigation to About page', (WidgetTester tester) async {
-    await tester.pumpWidget(const NewsTracker(showPermissionDialog: false));
+    await tester.pumpWidget(
+      ProviderScope(child: const NewsTracker(showPermissionDialog: false)),
+    );
 
     // Open drawer
     await tester.tap(find.byTooltip('Open navigation menu'));
