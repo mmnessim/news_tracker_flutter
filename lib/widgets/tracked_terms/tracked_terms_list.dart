@@ -8,6 +8,7 @@ import '../../model/tracked_term.dart';
 import 'tracked_term_tile.dart';
 
 class BTrackedTermsList extends ConsumerStatefulWidget {
+  // TODO: Rename as TrackedTermsList once original implementation is removed
   const BTrackedTermsList({super.key});
 
   @override
@@ -57,14 +58,24 @@ class BTrackedTermsListState extends ConsumerState<BTrackedTermsList> {
                     separatorBuilder: (_, __) => const Divider(),
                     itemBuilder: (context, index) {
                       final t = items[index];
-                      // return TrackedTermTile(term: t.term, id: t.id);
-                      return ListTile(
-                        title: Text(t.term),
-                        subtitle: Text('id: ${t.id}'),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete),
-                          onPressed: () => vm.remove(t.id),
+                      return TrackedTermTile(
+                        padding: EdgeInsets.symmetric(
+                          vertical: 16.0,
+                          horizontal: 12.0,
                         ),
+                        term: t.term,
+                        id: t.id,
+                        onDelete: () {
+                          vm.remove(t.id);
+                        },
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailsPage(term: t.term),
+                            ),
+                          );
+                        },
                       );
                     },
                   );
@@ -80,6 +91,8 @@ class BTrackedTermsListState extends ConsumerState<BTrackedTermsList> {
                     controller: _controller,
                     decoration: const InputDecoration(
                       hintText: 'Add tracked term',
+                      labelText: "Terms to Track",
+                      border: OutlineInputBorder(),
                     ),
                     onSubmitted: (_) => _addTerm(),
                   ),
@@ -96,6 +109,8 @@ class BTrackedTermsListState extends ConsumerState<BTrackedTermsList> {
   }
 }
 
+/// Old implementation
+/// TODO: Remove when safe to do so
 class TrackedTermsList extends ConsumerWidget {
   const TrackedTermsList({super.key});
 
@@ -127,6 +142,7 @@ class TrackedTermsList extends ConsumerWidget {
                       horizontal: 16.0,
                       vertical: 24.0,
                     ),
+                    onDelete: () {},
                     onTap: () {
                       Navigator.push(
                         context,

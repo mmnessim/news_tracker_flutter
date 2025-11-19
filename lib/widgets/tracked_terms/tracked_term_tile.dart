@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:news_tracker/providers/tracked_term_provider.dart';
 import 'package:news_tracker/utils/notifications/pending_notifications.dart';
 
 class TrackedTermTile extends ConsumerWidget {
@@ -13,6 +12,7 @@ class TrackedTermTile extends ConsumerWidget {
   final Color? backgroundColor;
   final void Function()? onTap;
   final int id;
+  final Function() onDelete;
 
   const TrackedTermTile({
     super.key,
@@ -22,6 +22,7 @@ class TrackedTermTile extends ConsumerWidget {
     this.backgroundColor,
     this.onTap,
     required this.id,
+    required this.onDelete,
   });
 
   String _formatIso(String iso) {
@@ -48,7 +49,7 @@ class TrackedTermTile extends ConsumerWidget {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(dialogContext).pop();
-                    ref.read(trackedTermsProvider.notifier).remove(term);
+                    onDelete();
                   },
                   child: const Text('Delete term'),
                 ),

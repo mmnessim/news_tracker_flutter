@@ -139,6 +139,8 @@ class MyHomePage extends ConsumerWidget {
       body: PageBodyContainer(
         children: [
           Text('Term count: $termsCount'),
+          //// Old implementation
+          // TODO: Remove when safe to do so
           Expanded(child: BTrackedTermsList()),
           // Padding(
           //   padding: const EdgeInsets.only(bottom: 32.0),
