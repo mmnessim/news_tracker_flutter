@@ -6,7 +6,7 @@ class NotificationSpec {
   final int id;
   final String title;
   final String body;
-  final String? payload;
+  final String payload;
   final TimeOfDay? timeOfDay;
   final tz.TZDateTime? exactDate;
   final DateTimeComponents? repeat;
@@ -16,7 +16,7 @@ class NotificationSpec {
     required this.id,
     required this.title,
     required this.body,
-    this.payload,
+    required this.payload,
     this.timeOfDay,
     this.exactDate,
     this.repeat,

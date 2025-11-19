@@ -27,10 +27,11 @@ class BTrackedTermsListState extends ConsumerState<BTrackedTermsList> {
   void _addTerm() {
     final text = _controller.text.trim();
     if (text.isEmpty) return;
-    final newTerm = TrackedTerm(
-      id: DateTime.now().millisecondsSinceEpoch,
-      term: text,
-    );
+
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final id = timestamp.hashCode.abs() % 2147483647;
+
+    final newTerm = TrackedTerm(id: id, term: text);
 
     ref.read(trackedTermsViewModelProvider.notifier).add(newTerm);
     _controller.clear();
