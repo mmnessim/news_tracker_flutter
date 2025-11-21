@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/model/news_response.dart';
 import 'package:news_tracker/providers/news_helper.dart';
+import 'package:news_tracker/view_model/details_view_model.dart';
 import 'package:news_tracker/widgets/page_body_container.dart';
 
 import 'widgets/article_tile.dart';
@@ -32,6 +33,7 @@ class DetailsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final contentAsync = ref.watch(newsProvider(term));
+    final vm = ref.watch(detailsViewModelProvider(term));
 
     return Scaffold(
       appBar: AppBar(
@@ -39,7 +41,7 @@ class DetailsPage extends ConsumerWidget {
         title: Text(term),
       ),
       body: PageBodyContainer(
-        children: [Expanded(child: _buildResultsArea(contentAsync))],
+        children: [Expanded(child: _buildResultsArea(vm))],
       ),
     );
   }
