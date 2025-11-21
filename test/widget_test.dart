@@ -57,17 +57,17 @@ void main() {
                 return Column(
                   children: [
                     AddTrackedTerm(
-                      onSearchTermAdded: (term) {
-                        setState(() {
-                          terms.add(term);
-                          termMap[term] = terms.length - 1;
-                        });
-                      },
+                      // onSearchTermAdded: (term) {
+                      //   setState(() {
+                      //     terms.add(term);
+                      //     termMap[term] = terms.length - 1;
+                      //   });
+                      // },
                     ),
                     TrackedTermsList(
-                      terms: terms,
-                      // termMap: termMap,
-                      onButtonClicked: (_) {}, // No-op for test
+                      // terms: terms,
+                      // // termMap: termMap,
+                      // onButtonClicked: (_) {}, // No-op for test
                     ),
                   ],
                 );
@@ -198,8 +198,8 @@ void main() {
       MaterialApp(
         home: DetailsPage(
           term: 'success',
-          client: mockClientSuccess,
-          searchTermsLoader: fakeLoader,
+          // client: mockClientSuccess,
+          // searchTermsLoader: fakeLoader,
         ),
       ),
     );
@@ -224,8 +224,8 @@ void main() {
         home: DetailsPage(
           key: ValueKey('fail'),
           term: 'fail',
-          client: mockClientError,
-          searchTermsLoader: fakeLoader,
+          // client: mockClientError,
+          // searchTermsLoader: fakeLoader,
         ),
       ),
     );

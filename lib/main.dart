@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/about.dart';
 import 'package:news_tracker/providers/tracked_term_provider.dart';
 import 'package:news_tracker/utils/initialize_app.dart';
+import 'package:news_tracker/widgets/drawer.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
 
 import 'widgets/page_body_container.dart';
@@ -104,38 +105,7 @@ class MyHomePage extends ConsumerWidget {
           ),
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              child: Text(
-                'Menu',
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
-            ),
-            ListTile(
-              title: Text('Home'),
-              onTap: () {
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Text('About'),
-              onTap: () {
-                Navigator.pop(context);
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AboutPage()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: OptionsDrawer(),
       body: PageBodyContainer(
         children: [
           Text('Term count: $termsCount'),
