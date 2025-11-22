@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:news_tracker/about.dart';
 import 'package:news_tracker/providers/tracked_term_provider.dart';
 import 'package:news_tracker/utils/initialize_app.dart';
 import 'package:news_tracker/widgets/coreui/app_bar.dart';
 import 'package:news_tracker/widgets/coreui/drawer.dart';
-import 'package:news_tracker/widgets/time_picker_row.dart';
 
 import 'widgets/page_body_container.dart';
 import 'widgets/tracked_terms/add_tracked_term.dart';
@@ -86,6 +84,7 @@ class MyHomePage extends ConsumerWidget {
     );
   }
 
+  /// Inform user to enable notifications in settings if permanently disabled
   void permissionCallback(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       showDialog(
@@ -93,7 +92,9 @@ class MyHomePage extends ConsumerWidget {
         builder: (context) => AlertDialog(
           title: Text('Notification Permission'),
           content: Text(
-            'Notification permission is permanently denied. NewsTracker will not work properly without notification permission. Visit your phone\'s Settings -> Apps -> NewsTracker -> Permissions to enable',
+            'Notification permission is permanently denied. NewsTracker will not '
+            'work properly without notification permission. Visit your phone\'s '
+            'Settings -> Apps -> NewsTracker -> Permissions to enable',
           ),
           actions: [
             TextButton(
