@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../about.dart';
+import '../../about.dart';
 
 class OptionsDrawer extends StatelessWidget {
   const OptionsDrawer({super.key});

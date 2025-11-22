@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/about.dart';
 import 'package:news_tracker/providers/tracked_term_provider.dart';
 import 'package:news_tracker/utils/initialize_app.dart';
-import 'package:news_tracker/widgets/drawer.dart';
+import 'package:news_tracker/widgets/coreui/app_bar.dart';
+import 'package:news_tracker/widgets/coreui/drawer.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
 
 import 'widgets/page_body_container.dart';
@@ -66,45 +67,11 @@ class MyHomePage extends ConsumerWidget {
     );
 
     if (showPermissionDialog) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Notification Permission'),
-            content: Text(
-              'Notification permission is permanently denied. NewsTracker will not work properly without notification permission. Visit your phone\'s Settings -> Apps -> NewsTracker -> Permissions to enable',
-            ),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
-      });
+      permissionCallback(context);
     }
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        title: Text('News Tracker'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.access_time),
-            tooltip: 'Set Notification Time',
-            onPressed: () {
-              showDialog(
-                context: context,
-                builder: (context) => AlertDialog(
-                  title: Text('Set Notification Time'),
-                  content: TimePickerRow(),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
+      appBar: DefaultBar(),
       drawer: OptionsDrawer(),
       body: PageBodyContainer(
         children: [
@@ -117,5 +84,25 @@ class MyHomePage extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  void permissionCallback(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Notification Permission'),
+          content: Text(
+            'Notification permission is permanently denied. NewsTracker will not work properly without notification permission. Visit your phone\'s Settings -> Apps -> NewsTracker -> Permissions to enable',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
