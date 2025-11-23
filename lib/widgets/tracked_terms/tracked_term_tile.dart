@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:news_tracker/providers/notification_time_provider.dart';
 import 'package:news_tracker/providers/tracked_term_provider.dart';
-import 'package:news_tracker/utils/notifications/pending_notifications.dart';
 
 class TrackedTermTile extends ConsumerWidget {
   final String term;
@@ -35,6 +33,7 @@ class TrackedTermTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final notificationAsync = ref.watch(notificationTimeProvider);
     return InkWell(
       onTap: onTap,
       onLongPress: () async {
@@ -94,50 +93,17 @@ class TrackedTermTile extends ConsumerWidget {
                 ],
               ),
             ),
-            StreamBuilder(
-              stream: notificationRescheduleStream.where(
-                (eventId) => eventId == id,
-              ),
-              builder: (context, asyncSnapshot) {
-                return FutureBuilder(
-                  future: getNotificationById(id),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Text('${snapshot.error}');
-                    }
-                    final pending = snapshot.data;
-                    if (pending == null) {
-                      return const Center(
-                        child: Text('No notifications pending'),
-                      );
-                    }
 
-                    String scheduledText = 'Unknown';
-
-                    if (pending.payload != null &&
-                        pending.payload!.isNotEmpty) {
-                      try {
-                        final map = jsonDecode(pending.payload!);
-                        if (map is Map && map['scheduledAt'] is String) {
-                          scheduledText = _formatIso(map['scheduledAt']);
-                        }
-                      } catch (_) {
-                        scheduledText = 'Invalid payload data';
-                      }
-                    }
-
-                    return Row(
-                      children: [
-                        Icon(
-                          Icons.notifications,
-                          size: 18,
-                          color: Colors.black,
-                        ),
-                        const SizedBox(width: 4),
-                        Text(scheduledText),
-                      ],
-                    );
-                  },
+            notificationAsync.when(
+              error: (err, stack) => Text("Error: $err"),
+              loading: () => CircularProgressIndicator(),
+              data: (time) {
+                return Row(
+                  children: [
+                    Icon(Icons.notifications, size: 18, color: Colors.black),
+                    const SizedBox(width: 4),
+                    Text("${time?.format(context)}"),
+                  ],
                 );
               },
             ),
