@@ -1,14 +1,18 @@
+import 'package:flutter/material.dart';
+
 class TrackedTerm {
   final String term;
   final String id;
-  bool locked;
-  String? lastArticleHash;
+  final bool locked;
+  final String? lastArticleHash;
+  final TimeOfDay? notificationTime;
 
   TrackedTerm({
     required this.term,
     required this.id,
     this.locked = false,
     this.lastArticleHash,
+    this.notificationTime,
   });
 
   TrackedTerm copyWith({
@@ -16,12 +20,14 @@ class TrackedTerm {
     String? id,
     bool? locked,
     String? lastArticleHash,
+    TimeOfDay? notificationTime,
   }) {
     return TrackedTerm(
       term: term ?? this.term,
       id: id ?? this.id,
       locked: locked ?? this.locked,
       lastArticleHash: lastArticleHash ?? this.lastArticleHash,
+      notificationTime: notificationTime ?? this.notificationTime,
     );
   }
 
