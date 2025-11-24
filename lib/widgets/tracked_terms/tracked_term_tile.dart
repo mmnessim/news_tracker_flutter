@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:news_tracker/providers/notification_time_provider.dart';
-import 'package:news_tracker/providers/tracked_term_provider.dart';
+import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
 
 class TrackedTermTile extends ConsumerWidget {
   final String term;
@@ -47,7 +47,7 @@ class TrackedTermTile extends ConsumerWidget {
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(dialogContext).pop();
-                    ref.read(trackedTermsProvider.notifier).remove(term);
+                    ref.read(newTrackedTermsProvider.notifier).remove(term, id);
                   },
                   child: const Text('Delete term'),
                 ),

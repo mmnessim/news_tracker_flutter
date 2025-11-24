@@ -43,8 +43,8 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
 
   Future<void> remove(String term, String? id) async {
     final current = await loadSearchTerms();
-    final termObjs = deserializeTermListHelper(current);
-    final updated = termObjs.where((t) => t.term != term).toList();
+    final termObjects = deserializeTermListHelper(current);
+    final updated = termObjects.where((t) => t.id != id).toList();
     state = AsyncValue.data(updated);
     final updatedStrings = serializeTermListHelper(updated);
     await saveSearchTerms(updatedStrings);
