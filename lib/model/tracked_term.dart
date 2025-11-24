@@ -1,6 +1,6 @@
 class TrackedTerm {
   final String term;
-  final int id;
+  final String id;
   bool locked;
   String? lastArticleHash;
 
@@ -13,7 +13,7 @@ class TrackedTerm {
 
   TrackedTerm copyWith({
     String? term,
-    int? id,
+    String? id,
     bool? locked,
     String? lastArticleHash,
   }) {
