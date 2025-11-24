@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:news_tracker/utils/notifications/reschedule_notifications.dart';
 import 'package:news_tracker/utils/preferences.dart';
 
 class NotificationTimeNotifier extends AsyncNotifier<TimeOfDay?> {
@@ -18,7 +17,7 @@ class NotificationTimeNotifier extends AsyncNotifier<TimeOfDay?> {
     await saveNotificationTime(newTime);
 
     // TODO: Evaluate whether this needs to be called here
-    await clearAndRescheduleNotifications();
+    //await clearAndRescheduleNotifications();
   }
 }
 

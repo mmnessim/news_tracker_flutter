@@ -66,3 +66,23 @@ Future<void> clearAndRescheduleNotifications({
     await scheduleNotificationWithId(spec, _plugin);
   }
 }
+
+Future<void> clearAndRescheduleById(
+  FlutterLocalNotificationsPlugin? plugin,
+  TimeOfDay time,
+  int id,
+) async {
+  final _plugin = plugin ?? notificationsPlugin;
+  final pending = await getPendingNotifications();
+  final n = pending.firstWhere((n) => n.id == id);
+  final newNotification = NotificationSpec(
+    id: id,
+    title: n.title!,
+    body: n.body!,
+    timeOfDay: time,
+    payload: n.payload,
+    exactDate: timeOfDayToTzDateTime(time),
+  );
+  _plugin.cancel(n.id);
+  scheduleNotificationWithId(newNotification, _plugin);
+}

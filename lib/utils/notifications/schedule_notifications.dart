@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
-import 'package:news_tracker/utils/notifications/pending_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import 'notification_spec.dart';
@@ -51,7 +50,6 @@ Future<void> scheduleNotificationWithId(
     matchDateTimeComponents: notificationSpec.repeat ?? DateTimeComponents.time,
     payload: payloadJson,
   );
-  notifyNotificationReschedule(notificationSpec.id);
 }
 
 tz.TZDateTime _nextInstanceOfTimeOfDay(TimeOfDay time) {
