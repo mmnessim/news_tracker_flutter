@@ -33,4 +33,11 @@ class TrackedTerm {
       lastArticleHash: json['lastArticleHash'],
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'term': term,
+    'id': id,
+    'locked': locked,
+    'lastArticleHash': lastArticleHash,
+  };
 }

@@ -10,7 +10,7 @@ class TrackedTermTile extends ConsumerWidget {
   final double borderRadius;
   final Color? backgroundColor;
   final void Function()? onTap;
-  final int id;
+  final String id;
 
   const TrackedTermTile({
     super.key,

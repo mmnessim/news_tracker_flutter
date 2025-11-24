@@ -6,7 +6,7 @@ import 'package:news_tracker/model/tracked_term.dart';
 import 'package:news_tracker/utils/preferences.dart';
 import 'package:uuid/uuid.dart';
 
-class TrackedTermProviderLocked extends AsyncNotifier<List<TrackedTerm>> {
+class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
   // TODO: There's probably a better way to do this. Maybe loadSearchTerms()
   // directly serializes/deserializes
   @override
@@ -27,12 +27,16 @@ class TrackedTermProviderLocked extends AsyncNotifier<List<TrackedTerm>> {
   }
 
   Future<void> add(String term, bool locked) async {
+    print('Adding term');
     final uuid = Uuid();
     final id = uuid.v4();
     final termObj = TrackedTerm(term: term, id: id, locked: locked);
     final jsonString = jsonEncode(termObj);
     final current = await loadSearchTerms();
     final terms = [...current, jsonString];
+    for (var t in terms) {
+      print(t);
+    }
     state = AsyncValue.data(deserializeTermListHelper(terms));
     await saveSearchTerms(terms);
   }
@@ -74,3 +78,8 @@ class TrackedTermProviderLocked extends AsyncNotifier<List<TrackedTerm>> {
     return termStrings;
   }
 }
+
+final newTrackedTermsProvider =
+    AsyncNotifierProvider<TrackedTermNotifierLocked, List<TrackedTerm>>(
+      TrackedTermNotifierLocked.new,
+    );

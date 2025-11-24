@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/details.dart';
-import 'package:news_tracker/providers/tracked_term_provider.dart';
+import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
 
 import 'tracked_term_tile.dart';
 
@@ -10,7 +10,7 @@ class TrackedTermsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final termsAsync = ref.watch(trackedTermsProvider);
+    final termsAsync = ref.watch(newTrackedTermsProvider);
 
     return termsAsync.when(
       data: (terms) {
@@ -30,8 +30,8 @@ class TrackedTermsList extends ConsumerWidget {
                     vertical: 4.0,
                   ),
                   child: TrackedTermTile(
-                    term: term,
-                    id: terms.indexOf(term),
+                    term: term.term,
+                    id: term.id,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16.0,
                       vertical: 24.0,
@@ -40,7 +40,7 @@ class TrackedTermsList extends ConsumerWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DetailsPage(term: term),
+                          builder: (context) => DetailsPage(term: term.term),
                         ),
                       );
                     },
