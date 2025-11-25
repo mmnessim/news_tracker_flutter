@@ -48,7 +48,7 @@ class NotificationSpec {
     );
   }
 
-  NotificationSpec fromTerm({required TrackedTerm term}) {
+  static NotificationSpec fromTerm({required TrackedTerm term}) {
     return NotificationSpec(
       id: term.notificationId,
       title: 'New results for ${term.term}',

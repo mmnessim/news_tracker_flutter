@@ -3,6 +3,10 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/model/tracked_term.dart';
+import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
+import 'package:news_tracker/utils/notifications/notification_spec.dart';
+import 'package:news_tracker/utils/notifications/schedule_notifications.dart';
+import 'package:news_tracker/utils/notifications/term_notification.dart';
 import 'package:news_tracker/utils/preferences.dart';
 import 'package:uuid/uuid.dart';
 
@@ -46,6 +50,10 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
       print(t);
     }
     state = AsyncValue.data(deserializeTermListHelper(terms));
+    // TODO: Check
+    //await scheduleNotificationFromTerm(termObj, null);
+    final spec = NotificationSpec.fromTerm(term: termObj);
+    await scheduleNotificationWithId(spec, notificationsPlugin);
     await saveSearchTerms(terms);
   }
 

@@ -31,10 +31,11 @@ class _AboutPageState extends State<AboutPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('About'),
       ),
-      body: Center(
+      body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const SizedBox(height: 8),
             TimePickerRow(),
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -47,17 +48,21 @@ class _AboutPageState extends State<AboutPage> {
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
-            NotificationDetails(),
-            const Spacer(),
-            InkWell(
-              onTap: () async {
-                await launchUrl(
-                  Uri.parse(
-                    'https://github.com/mmnessim/news_tracker_flutter.git',
-                  ),
-                );
-              },
-              child: Image.asset('assets/icon/github-mark.png', height: 32),
+            // Give NotificationDetails a bounded height so its ListView can layout.
+            const SizedBox(height: 8),
+            Expanded(child: NotificationDetails()),
+            const SizedBox(height: 16),
+            Center(
+              child: InkWell(
+                onTap: () async {
+                  await launchUrl(
+                    Uri.parse(
+                      'https://github.com/mmnessim/news_tracker_flutter.git',
+                    ),
+                  );
+                },
+                child: Image.asset('assets/icon/github-mark.png', height: 32),
+              ),
             ),
             const SizedBox(height: 16),
           ],

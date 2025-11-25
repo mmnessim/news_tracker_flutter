@@ -10,35 +10,40 @@ class NotificationDetails extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notificationAsync = ref.watch(notificationProvider);
-    return Row(
-      children: [
-        notificationAsync.when(
-          loading: () => CircularProgressIndicator(),
-          error: (err, stack) => Text('Error: $err'),
-          data: (notifications) {
-            for (var n in notifications) {
-              return Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'ID: ${n.id}\nPayload: ${n.payload}\nTitle: ${n.title}',
-                  ),
-                ),
-              );
-            }
 
-            if (notifications.isEmpty) {
-              return Text('No notifications scheduled');
-            } else {
-              return SizedBox(width: 1);
-            }
-          },
+    return Column(
+      children: [
+        Expanded(
+          child: notificationAsync.when(
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (err, stack) => Center(child: Text('Error: $err')),
+            data: (notifications) {
+              if (notifications.isEmpty) {
+                return const Center(child: Text('No notifications scheduled'));
+              }
+              return ListView.separated(
+                padding: const EdgeInsets.all(8.0),
+                itemCount: notifications.length,
+                separatorBuilder: (_, __) => const Divider(),
+                itemBuilder: (context, index) {
+                  final n = notifications[index];
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6.0),
+                    child: Text(
+                      'ID: ${n.id}\nPayload: ${n.payload}\nTitle: ${n.title}',
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         ),
       ],
     );
   }
 }
 
+@Deprecated('Use NotificationDetails instead')
 class _NotificationDetails extends StatelessWidget {
   final int id;
 
