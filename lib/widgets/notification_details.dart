@@ -1,13 +1,48 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:news_tracker/providers/notification_provider.dart';
 import 'package:news_tracker/utils/notifications/pending_notifications.dart';
 
-class NotificationDetails extends StatelessWidget {
+class NotificationDetails extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final notificationAsync = ref.watch(notificationProvider);
+    return Row(
+      children: [
+        notificationAsync.when(
+          loading: () => CircularProgressIndicator(),
+          error: (err, stack) => Text('Error: $err'),
+          data: (notifications) {
+            for (var n in notifications) {
+              return Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'ID: ${n.id}\nPayload: ${n.payload}\nTitle: ${n.title}',
+                  ),
+                ),
+              );
+            }
+
+            if (notifications.isEmpty) {
+              return Text('No notifications scheduled');
+            } else {
+              return SizedBox(width: 1);
+            }
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _NotificationDetails extends StatelessWidget {
   final int id;
 
-  const NotificationDetails({super.key, required this.id});
+  const _NotificationDetails({super.key, required this.id});
 
   String _formatIso(String iso) {
     try {

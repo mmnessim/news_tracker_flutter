@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:news_tracker/utils/preferences.dart';
+import 'package:news_tracker/widgets/notification_details.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -46,6 +47,7 @@ class _AboutPageState extends State<AboutPage> {
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
+            NotificationDetails(),
             const Spacer(),
             InkWell(
               onTap: () async {
