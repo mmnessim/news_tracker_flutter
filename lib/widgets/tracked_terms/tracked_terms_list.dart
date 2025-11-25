@@ -30,8 +30,7 @@ class TrackedTermsList extends ConsumerWidget {
                     vertical: 4.0,
                   ),
                   child: TrackedTermTile(
-                    term: term.term,
-                    id: term.id,
+                    termObject: term,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16.0,
                       vertical: 24.0,

@@ -1,25 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:news_tracker/model/tracked_term.dart';
 import 'package:news_tracker/providers/notification_time_provider.dart';
 import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
 
 class TrackedTermTile extends ConsumerWidget {
-  final String term;
+  final TrackedTerm termObject;
   final EdgeInsetsGeometry padding;
   final double borderRadius;
   final Color? backgroundColor;
   final void Function()? onTap;
-  final String id;
 
   const TrackedTermTile({
     super.key,
-    required this.term,
+    required this.termObject,
     this.padding = const EdgeInsets.all(8.0),
     this.borderRadius = 12.0,
     this.backgroundColor,
     this.onTap,
-    required this.id,
   });
 
   String _formatIso(String iso) {
@@ -41,13 +40,15 @@ class TrackedTermTile extends ConsumerWidget {
           context: context,
           builder: (dialogContext) {
             return AlertDialog(
-              title: Text('Manage "$term"'),
+              title: Text('Manage "${termObject.term}"'),
               //content: const Text('Delete this term?'),
               actions: [
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(dialogContext).pop();
-                    ref.read(newTrackedTermsProvider.notifier).remove(term, id);
+                    ref
+                        .read(newTrackedTermsProvider.notifier)
+                        .remove(termObject);
                   },
                   child: const Text('Delete term'),
                 ),
@@ -79,7 +80,7 @@ class TrackedTermTile extends ConsumerWidget {
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
-                      term,
+                      termObject.term,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.black,

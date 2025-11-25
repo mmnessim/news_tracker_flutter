@@ -49,16 +49,24 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
     await saveSearchTerms(terms);
   }
 
-  // TODO: Remove old `remove` and replace with one that accepts TrackedTerm as an argument
-  // This will involve refactoring tracked_term_tile.dart to accept TrackedTerm instead of just
-  // a String term
-  Future<void> remove(String term, String? id) async {
+  @Deprecated('Use remove(TrackedTerm term) instead')
+  Future<void> removeTermByString(String term, String? id) async {
     final current = await loadSearchTerms();
     final termObjects = deserializeTermListHelper(current);
     final updated = termObjects.where((t) => t.id != id).toList();
     state = AsyncValue.data(updated);
     final updatedStrings = serializeTermListHelper(updated);
     await saveSearchTerms(updatedStrings);
+  }
+
+  Future<void> remove(TrackedTerm term) async {
+    final current = await loadSearchTerms();
+    final termObjects = deserializeTermListHelper(current);
+    final updated = termObjects.where((t) => t.id != term.id).toList();
+    state = AsyncValue.data(updated);
+    final updatedStrings = serializeTermListHelper(updated);
+    await saveSearchTerms(updatedStrings);
+    await releaseNotificationId(term.notificationId);
   }
 
   /// Helper function to update state when terms are added or removed
