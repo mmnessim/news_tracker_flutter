@@ -6,6 +6,8 @@ import 'package:news_tracker/model/tracked_term.dart';
 import 'package:news_tracker/utils/preferences.dart';
 import 'package:uuid/uuid.dart';
 
+import '../utils/notifications/notification_id.dart';
+
 class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
   // TODO: There's probably a better way to do this. Maybe loadSearchTerms()
   // directly serializes/deserializes
@@ -26,11 +28,17 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
     return terms;
   }
 
+  /// Creates a TrackedTerm object with a UUID and a notification Id
   Future<void> add(String term, bool locked) async {
     print('Adding term');
     final uuid = Uuid();
     final id = uuid.v4();
-    final termObj = TrackedTerm(term: term, id: id, locked: locked);
+    final termObj = TrackedTerm(
+      term: term,
+      notificationId: await getNextNotificationId(),
+      id: id,
+      locked: locked,
+    );
     final jsonString = jsonEncode(termObj);
     final current = await loadSearchTerms();
     final terms = [...current, jsonString];
@@ -41,6 +49,9 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
     await saveSearchTerms(terms);
   }
 
+  // TODO: Remove old `remove` and replace with one that accepts TrackedTerm as an argument
+  // This will involve refactoring tracked_term_tile.dart to accept TrackedTerm instead of just
+  // a String term
   Future<void> remove(String term, String? id) async {
     final current = await loadSearchTerms();
     final termObjects = deserializeTermListHelper(current);
