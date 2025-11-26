@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:news_tracker/providers/notification_provider.dart';
-import 'package:news_tracker/utils/new_notifications/pending_notifications.dart';
+import 'package:news_tracker/utils/notifications/pending_notifications.dart';
 
 class NotificationDetails extends ConsumerStatefulWidget {
   const NotificationDetails({super.key});
@@ -19,8 +19,6 @@ class _NotificationDetailsState extends ConsumerState<NotificationDetails> {
 
   @override
   Widget build(BuildContext context) {
-    // Register the listener once during the first build to avoid the
-    // "debugDoingBuild" assertion that happens when calling ref.listen in initState.
     if (!_listenerRegistered) {
       ref.listen(notificationProvider, (_, __) {
         if (mounted) setState(() {});

@@ -1,10 +1,8 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:news_tracker/model/tracked_term.dart';
-import 'package:news_tracker/utils/new_notifications/initialize_notifications.dart';
-import 'package:news_tracker/utils/new_notifications/notification_details.dart';
+import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
+import 'package:news_tracker/utils/notifications/notification_details.dart';
 import 'package:news_tracker/utils/tz_convert.dart';
 
 Future<void> scheduleNotificationFromTerm(
@@ -21,11 +19,11 @@ Future<void> scheduleNotificationFromTerm(
   final _plugin = plugin ?? notificationsPlugin;
 
   // TODO: review what's in payloadMap and change as needed
-  final payloadMap = <String, dynamic>{
-    'data': term.term,
-    'scheduledAt': term.notificationTime,
-  };
-  final payloadJson = jsonEncode(payloadMap);
+  // final payloadMap = <String, dynamic>{
+  //   'data': term.term,
+  //   'scheduledAt': term.notificationTime,
+  // };
+  // final payloadJson = jsonEncode(payloadMap);
 
   final pending = await _plugin.pendingNotificationRequests();
   final alreadyScheduled = pending.any((n) => n.id == term.notificationId);
@@ -41,7 +39,7 @@ Future<void> scheduleNotificationFromTerm(
     details,
     androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     matchDateTimeComponents: DateTimeComponents.time,
-    payload: payloadJson,
+    payload: term.term,
   );
 }
 
