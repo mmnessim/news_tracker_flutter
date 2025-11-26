@@ -77,6 +77,21 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
     ]);
   }
 
+  Future<void> updateTerm(TrackedTerm term, int oldId) async {
+    final current = await loadSearchTerms();
+    final termObjects = deserializeTermListHelper(current);
+    final updated = termObjects.map((t) {
+      if (t.id == term.id) {
+        return term;
+      }
+      return t;
+    });
+
+    final updatedStrings = serializeTermListHelper(updated.toList());
+    await saveSearchTerms(updatedStrings);
+    await releaseNotificationId(oldId);
+  }
+
   /// Helper function to update state when terms are added or removed
   List<TrackedTerm> deserializeTermListHelper(List<String> termStrings) {
     List<TrackedTerm> terms = [];

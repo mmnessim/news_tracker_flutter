@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/providers/notification_time_provider.dart';
-import 'package:news_tracker/utils/notifications/reschedule_notifications.dart';
+import 'package:news_tracker/utils/notifications/schedule_notification.dart';
 
 class TimePickerRow extends ConsumerWidget {
   void _setNotificationTime(
@@ -16,7 +16,7 @@ class TimePickerRow extends ConsumerWidget {
     if (picked != null) {
       ref.read(notificationTimeProvider.notifier).setNewTime(picked);
     }
-    clearAndRescheduleNotifications();
+    rescheduleAllNotifications(ref, null);
   }
 
   @override

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/model/tracked_term.dart';
+import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
 import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
 import 'package:news_tracker/utils/notifications/notification_details.dart';
+import 'package:news_tracker/utils/notifications/notification_id.dart';
 import 'package:news_tracker/utils/tz_convert.dart';
 
 Future<void> scheduleNotificationFromTerm(
@@ -49,4 +52,30 @@ Future<void> cancelNotificationByTerm(
 ) async {
   final _plugin = plugin ?? notificationsPlugin;
   await _plugin.cancel(term.notificationId);
+}
+
+Future<void> rescheduleAllNotifications(
+  WidgetRef ref,
+  FlutterLocalNotificationsPlugin? plugin,
+) async {
+  final _plugin = plugin ?? notificationsPlugin;
+  final terms = await ref.read(newTrackedTermsProvider.future);
+  try {
+    for (final term in terms) {
+      if (term.locked) {
+        continue;
+      }
+      await _plugin.cancel(term.notificationId);
+      final newTerm = term.copyWith(
+        notificationId: await getNextNotificationId(),
+      );
+      await scheduleNotificationFromTerm(newTerm, _plugin);
+      await ref
+          .read(newTrackedTermsProvider.notifier)
+          .updateTerm(term, term.notificationId);
+      // await ref.read(newTrackedTermsProvider.notifier).add(term);
+    }
+  } catch (e) {
+    print('Error rescheduling $e');
+  }
 }

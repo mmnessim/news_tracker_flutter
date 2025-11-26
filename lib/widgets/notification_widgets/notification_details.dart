@@ -58,7 +58,7 @@ class _NotificationDetailsState extends ConsumerState<NotificationDetails> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6.0),
                     child: Text(
-                      'ID: ${n.id}\nPayload: ${n.payload}\nTitle: ${n.title}',
+                      'ID: ${n.id}\nPayload: ${n.payload}\nTitle: ${n.title}\n',
                     ),
                   );
                 },
