@@ -1,31 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:news_tracker/utils/preferences.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
 import 'package:news_tracker/widgets/notification_details.dart';
 import 'package:news_tracker/widgets/time_picker_row.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AboutPage extends StatefulWidget {
+class AboutPage extends ConsumerWidget {
   const AboutPage({super.key});
 
   @override
-  State<AboutPage> createState() => _AboutPageState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Watch the provider to trigger loading (value isn't rendered here).
+    ref.watch(newTrackedTermsProvider);
 
-class _AboutPageState extends State<AboutPage> {
-  final List<String> _searchTerms = [];
-
-  @override
-  void initState() {
-    super.initState();
-    loadSearchTerms().then(
-      (terms) => setState(() {
-        _searchTerms.addAll(terms);
-      }),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -48,7 +35,6 @@ class _AboutPageState extends State<AboutPage> {
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             ),
-            // Give NotificationDetails a bounded height so its ListView can layout.
             const SizedBox(height: 8),
             Expanded(child: NotificationDetails()),
             const SizedBox(height: 16),

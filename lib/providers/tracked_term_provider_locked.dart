@@ -4,9 +4,7 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/model/tracked_term.dart';
 import 'package:news_tracker/utils/new_notifications/initialize_notifications.dart';
-import 'package:news_tracker/utils/notifications/notification_spec.dart';
-import 'package:news_tracker/utils/notifications/schedule_notifications.dart';
-import 'package:news_tracker/utils/notifications/term_notification.dart';
+import 'package:news_tracker/utils/new_notifications/new_schedule_notification.dart';
 import 'package:news_tracker/utils/preferences.dart';
 import 'package:uuid/uuid.dart';
 
@@ -50,10 +48,8 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
       print(t);
     }
     state = AsyncValue.data(deserializeTermListHelper(terms));
-    // TODO: Check
-    //await scheduleNotificationFromTerm(termObj, null);
-    final spec = NotificationSpec.fromTerm(term: termObj);
-    await scheduleNotificationWithId(spec, notificationsPlugin);
+
+    await scheduleNotificationFromTerm(termObj, notificationsPlugin);
     await saveSearchTerms(terms);
   }
 
@@ -72,9 +68,13 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
     final termObjects = deserializeTermListHelper(current);
     final updated = termObjects.where((t) => t.id != term.id).toList();
     state = AsyncValue.data(updated);
+
     final updatedStrings = serializeTermListHelper(updated);
     await saveSearchTerms(updatedStrings);
-    await releaseNotificationId(term.notificationId);
+    await Future.wait([
+      cancelNotificationByTerm(term, null),
+      releaseNotificationId(term.notificationId),
+    ]);
   }
 
   /// Helper function to update state when terms are added or removed
@@ -107,6 +107,6 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
 }
 
 final newTrackedTermsProvider =
-AsyncNotifierProvider<TrackedTermNotifierLocked, List<TrackedTerm>>(
-  TrackedTermNotifierLocked.new,
-);
+    AsyncNotifierProvider<TrackedTermNotifierLocked, List<TrackedTerm>>(
+      TrackedTermNotifierLocked.new,
+    );
