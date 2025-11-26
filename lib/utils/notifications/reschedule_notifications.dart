@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
+import 'package:news_tracker/utils/new_notifications/initialize_notifications.dart';
 import 'package:news_tracker/utils/notifications/pending_notifications.dart';
 import 'package:news_tracker/utils/notifications/schedule_notifications.dart';
 import 'package:news_tracker/utils/preferences.dart';
@@ -33,11 +33,9 @@ Future<void> clearAndRescheduleNotifications({
   }
 }
 
-Future<void> clearAndRescheduleById(
-  FlutterLocalNotificationsPlugin? plugin,
-  TimeOfDay time,
-  int id,
-) async {
+Future<void> clearAndRescheduleById(FlutterLocalNotificationsPlugin? plugin,
+    TimeOfDay time,
+    int id,) async {
   final _plugin = plugin ?? notificationsPlugin;
   final pending = await getPendingNotifications();
   final n = pending.firstWhere((n) => n.id == id);

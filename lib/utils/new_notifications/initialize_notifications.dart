@@ -5,7 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:news_tracker/details.dart';
 
 final FlutterLocalNotificationsPlugin notificationsPlugin =
-    FlutterLocalNotificationsPlugin();
+FlutterLocalNotificationsPlugin();
 
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
   'default_channel', // id
@@ -15,8 +15,7 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
 );
 
 Future<void> initializeNotifications(
-  GlobalKey<NavigatorState> navigatorKey,
-) async {
+    GlobalKey<NavigatorState> navigatorKey,) async {
   const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
   const settings = InitializationSettings(
     android: androidSettings,
@@ -44,7 +43,6 @@ Future<void> initializeNotifications(
     final payload = details.notificationResponse?.payload;
     if (payload != null && payload.isNotEmpty) {
       final map = jsonDecode(payload);
-      //print(map);
       if (map is Map && map['data'] is String) {
         final term = map['data'] as String;
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -57,14 +55,14 @@ Future<void> initializeNotifications(
   }
   await notificationsPlugin
       .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin
-      >()
+      AndroidFlutterLocalNotificationsPlugin
+  >()
       ?.createNotificationChannel(channel);
 
   final androidImplementation = notificationsPlugin
       .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin
-      >();
+      AndroidFlutterLocalNotificationsPlugin
+  >();
 
   if (androidImplementation != null) {
     final canScheduleExact = await androidImplementation

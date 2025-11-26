@@ -2,15 +2,13 @@ import 'dart:convert';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:news_tracker/model/tracked_term.dart';
-import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
-import 'package:news_tracker/utils/notifications/notification_details.dart';
+import 'package:news_tracker/utils/new_notifications/initialize_notifications.dart';
+import 'package:news_tracker/utils/new_notifications/notification_details.dart';
 import 'package:news_tracker/utils/tz_convert.dart';
 
 // TODO: Finish this function, replace all current notification functions except initialization
-Future<void> scheduleNotificationFromTerm(
-  TrackedTerm term,
-  FlutterLocalNotificationsPlugin? plugin,
-) async {
+Future<void> scheduleNotificationFromTerm(TrackedTerm term,
+    FlutterLocalNotificationsPlugin? plugin,) async {
   final details = defaultAndroidDetails;
 
   if (term.notificationTime == null) {

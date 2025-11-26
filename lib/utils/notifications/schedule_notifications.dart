@@ -2,23 +2,21 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
-import 'package:news_tracker/utils/notifications/notification_details.dart';
+import 'package:news_tracker/utils/new_notifications/initialize_notifications.dart';
+import 'package:news_tracker/utils/new_notifications/notification_details.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import 'notification_spec.dart';
 
-Future<void> scheduleNotificationWithId(
-  NotificationSpec notificationSpec,
-  FlutterLocalNotificationsPlugin? plugin,
-) async {
+Future<void> scheduleNotificationWithId(NotificationSpec notificationSpec,
+    FlutterLocalNotificationsPlugin? plugin,) async {
   final details = defaultAndroidDetails;
 
   final scheduled =
       notificationSpec.exactDate ??
-      (notificationSpec.timeOfDay != null
-          ? nextInstanceOfTimeOfDay(notificationSpec.timeOfDay!)
-          : tz.TZDateTime.now(tz.local).add(Duration(seconds: 10)));
+          (notificationSpec.timeOfDay != null
+              ? nextInstanceOfTimeOfDay(notificationSpec.timeOfDay!)
+              : tz.TZDateTime.now(tz.local).add(Duration(seconds: 10)));
 
   final _plugin = plugin ?? notificationsPlugin;
 

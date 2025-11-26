@@ -3,14 +3,14 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/model/tracked_term.dart';
-import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
+import 'package:news_tracker/utils/new_notifications/initialize_notifications.dart';
 import 'package:news_tracker/utils/notifications/notification_spec.dart';
 import 'package:news_tracker/utils/notifications/schedule_notifications.dart';
 import 'package:news_tracker/utils/notifications/term_notification.dart';
 import 'package:news_tracker/utils/preferences.dart';
 import 'package:uuid/uuid.dart';
 
-import '../utils/notifications/notification_id.dart';
+import '../utils/new_notifications/notification_id.dart';
 
 class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
   // TODO: There's probably a better way to do this. Maybe loadSearchTerms()
@@ -107,6 +107,6 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
 }
 
 final newTrackedTermsProvider =
-    AsyncNotifierProvider<TrackedTermNotifierLocked, List<TrackedTerm>>(
-      TrackedTermNotifierLocked.new,
-    );
+AsyncNotifierProvider<TrackedTermNotifierLocked, List<TrackedTerm>>(
+  TrackedTermNotifierLocked.new,
+);
