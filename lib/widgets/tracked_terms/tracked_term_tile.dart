@@ -1,39 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:news_tracker/model/tracked_term.dart';
 import 'package:news_tracker/providers/notification_time_provider.dart';
-import 'package:news_tracker/providers/tracked_term_provider.dart';
+import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
 
+// TODO: Notification time just shows the global notification time, not each individual term's notification time
 class TrackedTermTile extends ConsumerWidget {
-  final String term;
+  final TrackedTerm termObject;
   final EdgeInsetsGeometry padding;
   final double borderRadius;
   final Color? backgroundColor;
   final void Function()? onTap;
-  final int id;
 
-  const TrackedTermTile({
+  TrackedTermTile({
     super.key,
-    required this.term,
+    required this.termObject,
     this.padding = const EdgeInsets.all(8.0),
     this.borderRadius = 12.0,
     this.backgroundColor,
     this.onTap,
-    required this.id,
   });
 
-  String _formatIso(String iso) {
-    try {
-      final dt = DateTime.parse(iso).toLocal();
-      return DateFormat(' h:mm a').format(dt);
-    } catch (_) {
-      return iso;
-    }
-  }
+  // String _formatIso(String iso) {
+  //   try {
+  //     final dt = DateTime.parse(iso).toLocal();
+  //     return DateFormat(' h:mm a').format(dt);
+  //   } catch (_) {
+  //     return iso;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notificationAsync = ref.watch(notificationTimeProvider);
+
     return InkWell(
       onTap: onTap,
       onLongPress: () async {
@@ -41,13 +41,14 @@ class TrackedTermTile extends ConsumerWidget {
           context: context,
           builder: (dialogContext) {
             return AlertDialog(
-              title: Text('Manage "$term"'),
-              //content: const Text('Delete this term?'),
+              title: Text('Manage "${termObject.term}"'),
               actions: [
                 ElevatedButton(
                   onPressed: () {
                     Navigator.of(dialogContext).pop();
-                    ref.read(trackedTermsProvider.notifier).remove(term);
+                    ref
+                        .read(newTrackedTermsProvider.notifier)
+                        .remove(termObject);
                   },
                   child: const Text('Delete term'),
                 ),
@@ -79,7 +80,7 @@ class TrackedTermTile extends ConsumerWidget {
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
-                      term,
+                      termObject.term,
                       style: const TextStyle(
                         fontSize: 16,
                         color: Colors.black,
@@ -102,7 +103,22 @@ class TrackedTermTile extends ConsumerWidget {
                   children: [
                     Icon(Icons.notifications, size: 18, color: Colors.black),
                     const SizedBox(width: 4),
-                    Text("${time?.format(context)}"),
+                    Text('${time?.format(context)}'),
+                    IconButton(
+                      onPressed: () async {
+                        await ref
+                            .read(newTrackedTermsProvider.notifier)
+                            .toggleLocked(termObject.id);
+                        // termObject = termObject.copyWith(
+                        //   locked: !termObject.locked,
+                        // );
+                      },
+                      icon: Icon(
+                        termObject.locked ? Icons.lock : Icons.lock_open,
+                        size: 18,
+                        color: Colors.black,
+                      ),
+                    ),
                   ],
                 );
               },

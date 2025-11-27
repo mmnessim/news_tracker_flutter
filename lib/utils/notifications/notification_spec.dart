@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:news_tracker/utils/notifications/old_schedule_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
+
+import '../../model/tracked_term.dart';
 
 class NotificationSpec {
   final int id;
@@ -42,6 +45,21 @@ class NotificationSpec {
       exactDate: exactDate ?? this.exactDate,
       repeat: repeat ?? this.repeat,
       locked: locked ?? this.locked,
+    );
+  }
+
+  static NotificationSpec fromTerm({required TrackedTerm term}) {
+    return NotificationSpec(
+      id: term.notificationId,
+      title: 'New results for ${term.term}',
+      body: 'Tap here to see results',
+      payload: term.term,
+      timeOfDay: term.notificationTime,
+      exactDate: term.notificationTime != null
+          ? nextInstanceOfTimeOfDay(term.notificationTime!)
+          : null,
+      repeat: DateTimeComponents.time,
+      locked: term.locked,
     );
   }
 }

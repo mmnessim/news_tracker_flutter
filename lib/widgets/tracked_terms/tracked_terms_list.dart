@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/details.dart';
-import 'package:news_tracker/providers/tracked_term_provider.dart';
+import 'package:news_tracker/providers/notification_time_provider.dart';
+import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
+import 'package:news_tracker/widgets/notification_widgets/global_notification_time_widget.dart';
 
 import 'tracked_term_tile.dart';
 
@@ -10,19 +12,33 @@ class TrackedTermsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final termsAsync = ref.watch(trackedTermsProvider);
+    final termsAsync = ref.watch(newTrackedTermsProvider);
+    final timeAsync = ref.watch(notificationTimeProvider);
+    final time = timeAsync.when(
+      loading: () => TimeOfDay.now(),
+      error: (err, stack) => null,
+      data: (t) => t,
+    );
 
     return termsAsync.when(
       data: (terms) {
         if (terms.isEmpty) {
           return ListView(
             shrinkWrap: true,
-            children: [ListTile(title: Text('Add search terms below'))],
+            children: [
+              (time != null)
+                  ? GlobalNotificationTimeWidget(time: time)
+                  : const SizedBox.shrink(),
+              ListTile(title: Text('Add search terms below')),
+            ],
           );
         } else {
           return ListView(
             shrinkWrap: true,
             children: [
+              (time != null)
+                  ? GlobalNotificationTimeWidget(time: time)
+                  : const SizedBox.shrink(),
               ...terms.map(
                 (term) => Padding(
                   padding: const EdgeInsets.symmetric(
@@ -30,8 +46,7 @@ class TrackedTermsList extends ConsumerWidget {
                     vertical: 4.0,
                   ),
                   child: TrackedTermTile(
-                    term: term,
-                    id: terms.indexOf(term),
+                    termObject: term,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16.0,
                       vertical: 24.0,
@@ -40,7 +55,7 @@ class TrackedTermsList extends ConsumerWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DetailsPage(term: term),
+                          builder: (context) => DetailsPage(term: term.term),
                         ),
                       );
                     },

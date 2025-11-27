@@ -4,9 +4,10 @@ import 'package:news_tracker/utils/notifications/reschedule_notifications.dart';
 import 'package:news_tracker/utils/preferences.dart';
 
 import '../utils/notifications/notification_spec.dart';
-import '../utils/notifications/schedule_notifications.dart';
+import '../utils/notifications/old_schedule_notifications.dart';
 import '../utils/tz_convert.dart';
 
+@Deprecated('Use TrackedTermNotifierLocked instead')
 class TrackedTermNotifier extends AsyncNotifier<List<String>> {
   @override
   Future<List<String>> build() async {
@@ -48,6 +49,9 @@ class TrackedTermNotifier extends AsyncNotifier<List<String>> {
   }
 }
 
+@Deprecated(
+  'Use newTrackedTermsProvider instead. trackedTermsProvider will be removed in future updates',
+)
 final trackedTermsProvider =
     AsyncNotifierProvider<TrackedTermNotifier, List<String>>(
       TrackedTermNotifier.new,

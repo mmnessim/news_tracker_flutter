@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:news_tracker/providers/tracked_term_provider.dart';
+import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
 import 'package:news_tracker/utils/initialize_app.dart';
 import 'package:news_tracker/widgets/coreui/app_bar.dart';
 import 'package:news_tracker/widgets/coreui/drawer.dart';
@@ -56,7 +56,7 @@ class MyHomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final termsAsync = ref.watch(trackedTermsProvider);
+    final termsAsync = ref.watch(newTrackedTermsProvider);
 
     final termsCount = termsAsync.when(
       data: (terms) => terms.length,

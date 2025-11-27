@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:news_tracker/providers/tracked_term_provider.dart';
+import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
 
 class AddTrackedTerm extends ConsumerWidget {
   final TextEditingController _controller = TextEditingController();
@@ -17,7 +17,7 @@ class AddTrackedTerm extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     Future<void> addSearchTerm(String term) async {
-      await ref.read(trackedTermsProvider.notifier).add(term);
+      await ref.read(newTrackedTermsProvider.notifier).add(term, false);
     }
 
     return Column(
