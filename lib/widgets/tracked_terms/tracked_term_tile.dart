@@ -6,7 +6,7 @@ import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
 
 // TODO: Notification time just shows the global notification time, not each individual term's notification time
 class TrackedTermTile extends ConsumerWidget {
-  TrackedTerm termObject;
+  final TrackedTerm termObject;
   final EdgeInsetsGeometry padding;
   final double borderRadius;
   final Color? backgroundColor;
@@ -103,15 +103,15 @@ class TrackedTermTile extends ConsumerWidget {
                   children: [
                     Icon(Icons.notifications, size: 18, color: Colors.black),
                     const SizedBox(width: 4),
-                    Text('${termObject.notificationTime}'),
+                    Text('${time?.format(context)}'),
                     IconButton(
                       onPressed: () async {
                         await ref
                             .read(newTrackedTermsProvider.notifier)
                             .toggleLocked(termObject.id);
-                        termObject = termObject.copyWith(
-                          locked: !termObject.locked,
-                        );
+                        // termObject = termObject.copyWith(
+                        //   locked: !termObject.locked,
+                        // );
                       },
                       icon: Icon(
                         termObject.locked ? Icons.lock : Icons.lock_open,
