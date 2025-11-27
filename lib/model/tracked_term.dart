@@ -41,6 +41,12 @@ class TrackedTerm {
       notificationId: json['notificationId'],
       id: json['id'],
       locked: json['locked'] ?? false,
+      notificationTime: json['notificationTime'] != null
+          ? TimeOfDay(
+              hour: json['notificationTime']['hour'],
+              minute: json['notificationTime']['minute'],
+            )
+          : null,
       lastArticleHash: json['lastArticleHash'],
     );
   }
@@ -50,6 +56,12 @@ class TrackedTerm {
     'notificationId': notificationId,
     'id': id,
     'locked': locked,
+    'notificationTime': notificationTime != null
+        ? {
+            'hour': notificationTime!.hour,
+            'minute': notificationTime!.minute,
+          }
+        : null,
     'lastArticleHash': lastArticleHash,
   };
 }

@@ -31,6 +31,11 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
     return terms;
   }
 
+  Future<List<TrackedTerm>> getAllTerms() async {
+    final current = await loadSearchTerms();
+    return deserializeTermListHelper(current);
+  }
+
   /// Creates a TrackedTerm object with a UUID and a notification Id
   Future<void> add(String term, bool locked) async {
     print('Adding term');
@@ -98,11 +103,11 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
     await releaseNotificationId(oldId);
   }
 
-  Future<void> toggleLocked(String id) async {
+  Future<void> toggleLocked(TrackedTerm term) async {
     final current = await loadSearchTerms();
     final termObjects = deserializeTermListHelper(current);
     final updated = termObjects.map((t) {
-      if (t.id == id) {
+      if (t.id == term.id) {
         print(
           'Changing locked status of ${t.term} from ${t.locked} to ${!t.locked}',
         );

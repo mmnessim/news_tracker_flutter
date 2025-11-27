@@ -28,7 +28,7 @@ void main() {
       expect(find.text('News Tracker'), findsOneWidget);
 
       // Check for TrackedTermsList
-      expect(find.byType(TrackedTermsList), findsOneWidget);
+      expect(find.byType(OldTrackedTermsList), findsOneWidget);
 
       // Check for AddNewsItem
       expect(find.byType(AddTrackedTerm), findsOneWidget);
@@ -64,7 +64,7 @@ void main() {
                       //   });
                       // },
                     ),
-                    TrackedTermsList(
+                    OldTrackedTermsList(
                       // terms: terms,
                       // // termMap: termMap,
                       // onButtonClicked: (_) {}, // No-op for test
