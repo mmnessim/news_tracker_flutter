@@ -14,6 +14,10 @@ Future<void> scheduleNotificationFromTerm(
 ) async {
   final details = defaultAndroidDetails;
 
+  if (term.locked) {
+    return;
+  }
+
   // Schedule notification for 10 seconds from now if no time set
   final scheduled = (term.notificationTime != null)
       ? timeOfDayToTzDateTime(term.notificationTime!)
@@ -63,16 +67,19 @@ Future<void> rescheduleAllNotifications(
   try {
     for (final term in terms) {
       if (term.locked) {
+        print('Term: ${term.term} is locked');
         continue;
       }
       await _plugin.cancel(term.notificationId);
       final newTerm = term.copyWith(
         notificationId: await getNextNotificationId(),
       );
-      await scheduleNotificationFromTerm(newTerm, _plugin);
       await ref
           .read(newTrackedTermsProvider.notifier)
           .updateTerm(term, term.notificationId);
+
+      await scheduleNotificationFromTerm(newTerm, _plugin);
+
       // await ref.read(newTrackedTermsProvider.notifier).add(term);
     }
   } catch (e) {

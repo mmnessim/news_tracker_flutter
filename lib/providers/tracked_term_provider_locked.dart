@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/model/tracked_term.dart';
 import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
@@ -35,12 +36,15 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
     print('Adding term');
     final uuid = Uuid();
     final id = uuid.v4();
+    final time = await loadNotificationTime() ?? TimeOfDay.now();
     final termObj = TrackedTerm(
       term: term,
       notificationId: await getNextNotificationId(),
       id: id,
       locked: locked,
+      notificationTime: time,
     );
+    print(termObj.notificationTime);
     final jsonString = jsonEncode(termObj);
     final current = await loadSearchTerms();
     final terms = [...current, jsonString];
@@ -85,11 +89,32 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
         return term;
       }
       return t;
-    });
+    }).toList();
+
+    state = AsyncValue.data(updated);
+
+    final updatedStrings = serializeTermListHelper(updated);
+    await saveSearchTerms(updatedStrings);
+    await releaseNotificationId(oldId);
+  }
+
+  Future<void> toggleLocked(String id) async {
+    final current = await loadSearchTerms();
+    final termObjects = deserializeTermListHelper(current);
+    final updated = termObjects.map((t) {
+      if (t.id == id) {
+        print(
+          'Changing locked status of ${t.term} from ${t.locked} to ${!t.locked}',
+        );
+        return t.copyWith(locked: !t.locked);
+      }
+      return t;
+    }).toList();
+
+    state = AsyncValue.data(updated);
 
     final updatedStrings = serializeTermListHelper(updated.toList());
     await saveSearchTerms(updatedStrings);
-    await releaseNotificationId(oldId);
   }
 
   /// Helper function to update state when terms are added or removed

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:news_tracker/model/tracked_term.dart';
 import 'package:news_tracker/providers/notification_time_provider.dart';
 import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
 
+// TODO: Notification time just shows the global notification time, not each individual term's notification time
 class TrackedTermTile extends ConsumerWidget {
-  final TrackedTerm termObject;
+  TrackedTerm termObject;
   final EdgeInsetsGeometry padding;
   final double borderRadius;
   final Color? backgroundColor;
   final void Function()? onTap;
 
-  const TrackedTermTile({
+  TrackedTermTile({
     super.key,
     required this.termObject,
     this.padding = const EdgeInsets.all(8.0),
@@ -21,18 +21,19 @@ class TrackedTermTile extends ConsumerWidget {
     this.onTap,
   });
 
-  String _formatIso(String iso) {
-    try {
-      final dt = DateTime.parse(iso).toLocal();
-      return DateFormat(' h:mm a').format(dt);
-    } catch (_) {
-      return iso;
-    }
-  }
+  // String _formatIso(String iso) {
+  //   try {
+  //     final dt = DateTime.parse(iso).toLocal();
+  //     return DateFormat(' h:mm a').format(dt);
+  //   } catch (_) {
+  //     return iso;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final notificationAsync = ref.watch(notificationTimeProvider);
+
     return InkWell(
       onTap: onTap,
       onLongPress: () async {
@@ -41,7 +42,6 @@ class TrackedTermTile extends ConsumerWidget {
           builder: (dialogContext) {
             return AlertDialog(
               title: Text('Manage "${termObject.term}"'),
-              //content: const Text('Delete this term?'),
               actions: [
                 ElevatedButton(
                   onPressed: () {
@@ -103,7 +103,22 @@ class TrackedTermTile extends ConsumerWidget {
                   children: [
                     Icon(Icons.notifications, size: 18, color: Colors.black),
                     const SizedBox(width: 4),
-                    Text("${time?.format(context)}"),
+                    Text('${termObject.notificationTime}'),
+                    IconButton(
+                      onPressed: () async {
+                        await ref
+                            .read(newTrackedTermsProvider.notifier)
+                            .toggleLocked(termObject.id);
+                        termObject = termObject.copyWith(
+                          locked: !termObject.locked,
+                        );
+                      },
+                      icon: Icon(
+                        termObject.locked ? Icons.lock : Icons.lock_open,
+                        size: 18,
+                        color: Colors.black,
+                      ),
+                    ),
                   ],
                 );
               },
