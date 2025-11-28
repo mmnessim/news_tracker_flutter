@@ -10,13 +10,11 @@ import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
 class TrackedTermsState {
   final List<TrackedTerm> terms;
   final List<PendingNotificationRequest> pendingNotifications;
-  TrackedTermsState({
-    required this.terms,
-    required this.pendingNotifications,
-  });
+
+  TrackedTermsState({required this.terms, required this.pendingNotifications});
 }
 
-class TrackedTermsListViewModel extends AsyncNotifier<TrackedTermsState> {
+class HomeScreenVM extends AsyncNotifier<TrackedTermsState> {
   Future<TrackedTermsState> _compose() async {
     final terms = await ref.watch(newTrackedTermsProvider.future);
     final notifications = await ref.read(notificationProvider.future);
@@ -63,7 +61,10 @@ class TrackedTermsListViewModel extends AsyncNotifier<TrackedTermsState> {
     state = AsyncValue.data(await _compose());
   }
 
-  Future<void> updateNotificationTime(TrackedTerm term, TimeOfDay newTime) async {
+  Future<void> updateNotificationTime(
+    TrackedTerm term,
+    TimeOfDay newTime,
+  ) async {
     final notificationRepo = ref.read(notificationProvider.notifier);
     final termRepo = ref.read(newTrackedTermsProvider.notifier);
 
@@ -84,6 +85,5 @@ class TrackedTermsListViewModel extends AsyncNotifier<TrackedTermsState> {
   }
 }
 
-final trackedTermsListViewModelProvider =
-    AsyncNotifierProvider<TrackedTermsListViewModel, TrackedTermsState>(
-        TrackedTermsListViewModel.new);
+final homeScreenVMProvider =
+    AsyncNotifierProvider<HomeScreenVM, TrackedTermsState>(HomeScreenVM.new);

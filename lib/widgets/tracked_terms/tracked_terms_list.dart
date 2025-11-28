@@ -18,7 +18,7 @@ class TrackedTermsList extends ConsumerStatefulWidget {
 class _TrackedTermsListState extends ConsumerState<TrackedTermsList> {
   @override
   Widget build(BuildContext context) {
-    final vm = ref.watch(trackedTermsListViewModelProvider);
+    final vm = ref.watch(homeScreenVMProvider);
     return vm.when(
       data: (state) {
         final terms = state.terms;
@@ -28,8 +28,7 @@ class _TrackedTermsListState extends ConsumerState<TrackedTermsList> {
           return ListView(
             shrinkWrap: true,
             children: [
-              if (time != null)
-                GlobalNotificationTimeWidget(time: time),
+              if (time != null) GlobalNotificationTimeWidget(time: time),
               const ListTile(title: Text('Add search terms below')),
             ],
           );
@@ -37,8 +36,7 @@ class _TrackedTermsListState extends ConsumerState<TrackedTermsList> {
           return ListView(
             shrinkWrap: true,
             children: [
-              if (time != null)
-                GlobalNotificationTimeWidget(time: time),
+              if (time != null) GlobalNotificationTimeWidget(time: time),
               ...terms.map(
                 (term) => Padding(
                   padding: const EdgeInsets.symmetric(
@@ -59,8 +57,9 @@ class _TrackedTermsListState extends ConsumerState<TrackedTermsList> {
                         ),
                       );
                     },
-                    backgroundColor:
-                        Theme.of(context).colorScheme.primaryContainer,
+                    backgroundColor: Theme.of(
+                      context,
+                    ).colorScheme.primaryContainer,
                   ),
                 ),
               ),
