@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
+import 'package:news_tracker/screens/home_screen.dart';
 import 'package:news_tracker/utils/initialize_app.dart';
 import 'package:news_tracker/widgets/coreui/app_bar.dart';
 import 'package:news_tracker/widgets/coreui/drawer.dart';
@@ -41,10 +42,10 @@ class NewsTracker extends StatelessWidget {
           surface: Color.fromARGB(237, 250, 240, 248),
         ),
       ),
-      home: MyHomePage(
-        //title: 'News Tracker',
-        showPermissionDialog: showPermissionDialog,
-      ),
+      home: HomeScreen(),
+      // MyHomePage(
+      //   showPermissionDialog: showPermissionDialog,
+      // ),
     );
   }
 }
