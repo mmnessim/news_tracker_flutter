@@ -103,7 +103,6 @@ class TrackedTermTile extends ConsumerWidget {
                   children: [
                     Icon(Icons.notifications, size: 18, color: Colors.black),
                     const SizedBox(width: 4),
-                    // Text('${time?.format(context)}'),
                     Text('${termObject.notificationTime?.format(context)}'),
                     IconButton(
                       onPressed: () async {

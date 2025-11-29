@@ -73,6 +73,7 @@ class MyHomePage extends ConsumerWidget {
       appBar: DefaultBar(),
       drawer: OptionsDrawer(),
       body: PageBodyContainer(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Text('Term count: $termsCount'),
           Expanded(child: TrackedTermsList()),

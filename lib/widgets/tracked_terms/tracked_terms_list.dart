@@ -53,7 +53,7 @@ class _TrackedTermsListState extends ConsumerState<TrackedTermsList> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DetailsPage(term: term.term),
+                          builder: (context) => DetailsPage(term: term),
                         ),
                       );
                     },
@@ -121,7 +121,7 @@ class OldTrackedTermsList extends ConsumerWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DetailsPage(term: term.term),
+                          builder: (context) => DetailsPage(term: term),
                         ),
                       );
                     },

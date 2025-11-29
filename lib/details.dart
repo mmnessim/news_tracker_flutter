@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/model/news_response.dart';
+import 'package:news_tracker/model/tracked_term.dart';
 import 'package:news_tracker/view_model/details_view_model.dart';
 import 'package:news_tracker/widgets/page_body_container.dart';
 
 import 'widgets/article_tile.dart';
 
 class DetailsPage extends ConsumerWidget {
-  final String term;
+  final TrackedTerm term;
 
   const DetailsPage({super.key, required this.term});
 
@@ -18,6 +19,9 @@ class DetailsPage extends ConsumerWidget {
       data: (response) {
         if (response == null) {
           return const Center(child: Text('Error, response is null'));
+        }
+        if (response.articles.isEmpty) {
+          return const Center(child: Text('No results'));
         }
         return ListView.builder(
           itemCount: response.articles.length,
@@ -32,15 +36,39 @@ class DetailsPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // final contentAsync = ref.watch(newsProvider(term));
-    final vm = ref.watch(detailsViewModelProvider(term));
+    final vm = ref.watch(detailsViewModelProvider(term.term));
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(term),
+        title: Text(term.term),
       ),
       body: PageBodyContainer(
-        children: [Expanded(child: _buildResultsArea(vm))],
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            color: Theme.of(context).colorScheme.primary,
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${term.term}: ${term.notificationTime?.format(context)}',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  Icon(Icons.notifications, size: 18, color: Colors.white),
+                  Icon(
+                    term.locked ? Icons.lock : Icons.lock_open,
+                    size: 14,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Expanded(child: _buildResultsArea(vm)),
+        ],
       ),
     );
   }
