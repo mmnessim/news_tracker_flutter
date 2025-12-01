@@ -7,12 +7,21 @@ import 'package:news_tracker/widgets/page_body_container.dart';
 
 import '../details.dart';
 import '../model/tracked_term.dart';
-import '../new_widgets/term_inputs_widget.dart';
-import '../new_widgets/terms_list_widget.dart';
+import '../new_widgets/home_screen/term_inputs_widget.dart';
+import '../new_widgets/home_screen/terms_list_container_widget.dart';
+import '../new_widgets/home_screen/terms_list_widget.dart';
 
 class HomeScreen extends ConsumerWidget {
+  final bool showPermissionDialog;
+
+  HomeScreen({super.key, required this.showPermissionDialog});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (showPermissionDialog) {
+      permissionCallback(context);
+    }
+
     final notifier = ref.read(homeScreenVMProvider.notifier);
 
     return Scaffold(
@@ -22,7 +31,7 @@ class HomeScreen extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           // Text('Length: ${terms.length}'),
-          TermsListWidget(),
+          TermsListContainer(),
           Spacer(),
           Padding(
             padding: const EdgeInsets.only(bottom: 32, left: 8, right: 8),
@@ -34,30 +43,26 @@ class HomeScreen extends ConsumerWidget {
       ),
     );
   }
-}
 
-class TermsListWidget extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final terms = ref.watch(
-      homeScreenVMProvider.select(
-        (state) => state.maybeWhen(
-          data: (s) => s.terms,
-          orElse: () => <TrackedTerm>[],
+  void permissionCallback(BuildContext context) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Notification Permission'),
+          content: Text(
+            'Notification permission is permanently denied. NewsTracker will not '
+            'work properly without notification permission. Visit your phone\'s '
+            'Settings -> Apps -> NewsTracker -> Permissions to enable',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('OK'),
+            ),
+          ],
         ),
-      ),
-    );
-    final notifier = ref.read(homeScreenVMProvider.notifier);
-    return TermsList(
-      terms: [...terms],
-      onViewDetails: (term) async {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => DetailsPage(term: term)),
-        );
-      },
-      onDelete: (term) => notifier.removeTrackedTerm(term),
-      onToggleLocked: (term) => notifier.toggleLocked(term),
-    );
+      );
+    });
   }
 }
