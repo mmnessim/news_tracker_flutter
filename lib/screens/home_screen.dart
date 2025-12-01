@@ -13,13 +13,7 @@ import '../new_widgets/terms_list_widget.dart';
 class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final vm = ref.watch(homeScreenVMProvider);
-
-    final terms = vm.when(
-      data: (state) => state.terms,
-      loading: () => [],
-      error: (_, _) => [],
-    );
+    final notifier = ref.read(homeScreenVMProvider.notifier);
 
     return Scaffold(
       appBar: DefaultBar(),
@@ -27,33 +21,43 @@ class HomeScreen extends ConsumerWidget {
       body: PageBodyContainer(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Text('Length: ${terms.length}'),
-          TermsList(
-            terms: [...terms],
-            onViewDetails: (term) async {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailsPage(term: term),
-                ),
-              );
-            },
-            onToggleLocked: (term) =>
-                ref.read(homeScreenVMProvider.notifier).toggleLocked(term),
-            onDelete: (term) =>
-                ref.read(homeScreenVMProvider.notifier).removeTrackedTerm(term),
-          ),
+          // Text('Length: ${terms.length}'),
+          TermsListWidget(),
           Spacer(),
           Padding(
             padding: const EdgeInsets.only(bottom: 32, left: 8, right: 8),
             child: TermInput(
-              onAdd: (term, flag) => ref
-                  .read(homeScreenVMProvider.notifier)
-                  .addTrackedTerm(term, flag),
+              onAdd: (term, flag) => notifier.addTrackedTerm(term, flag),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class TermsListWidget extends ConsumerWidget {
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final terms = ref.watch(
+      homeScreenVMProvider.select(
+        (state) => state.maybeWhen(
+          data: (s) => s.terms,
+          orElse: () => <TrackedTerm>[],
+        ),
+      ),
+    );
+    final notifier = ref.read(homeScreenVMProvider.notifier);
+    return TermsList(
+      terms: [...terms],
+      onViewDetails: (term) async {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => DetailsPage(term: term)),
+        );
+      },
+      onDelete: (term) => notifier.removeTrackedTerm(term),
+      onToggleLocked: (term) => notifier.toggleLocked(term),
     );
   }
 }

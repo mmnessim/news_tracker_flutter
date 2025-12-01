@@ -45,10 +45,6 @@ class _TermInputState extends State<TermInput> {
           },
           icon: Icon(_flag ? Icons.lock : Icons.lock_open),
         ),
-        // Checkbox(
-        //   value: _flag,
-        //   onChanged: (v) => setState(() => _flag = v ?? false),
-        // ),
         ElevatedButton(onPressed: _submit, child: const Text('Add')),
       ],
     );
