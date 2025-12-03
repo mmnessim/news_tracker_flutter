@@ -5,11 +5,8 @@ import 'package:news_tracker/widgets/coreui/app_bar.dart';
 import 'package:news_tracker/widgets/coreui/drawer.dart';
 import 'package:news_tracker/widgets/page_body_container.dart';
 
-import '../details.dart';
-import '../model/tracked_term.dart';
 import '../new_widgets/home_screen/term_inputs_widget.dart';
 import '../new_widgets/home_screen/terms_list_container_widget.dart';
-import '../new_widgets/home_screen/terms_list_widget.dart';
 
 class HomeScreen extends ConsumerWidget {
   final bool showPermissionDialog;
@@ -22,7 +19,9 @@ class HomeScreen extends ConsumerWidget {
       permissionCallback(context);
     }
 
+    final vm = ref.watch(homeScreenVMProvider);
     final notifier = ref.read(homeScreenVMProvider.notifier);
+    final terms = vm.value?.terms;
 
     return Scaffold(
       appBar: DefaultBar(),
@@ -31,7 +30,7 @@ class HomeScreen extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           // Text('Length: ${terms.length}'),
-          TermsListContainer(),
+          TermsListContainer(terms: terms ?? []),
           Spacer(),
           Padding(
             padding: const EdgeInsets.only(bottom: 32, left: 8, right: 8),

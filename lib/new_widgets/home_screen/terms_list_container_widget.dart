@@ -7,16 +7,20 @@ import '../../model/tracked_term.dart';
 import '../../view_model/tracked_terms_list_view_model.dart';
 
 class TermsListContainer extends ConsumerWidget {
+  final List<TrackedTerm> terms;
+
+  const TermsListContainer({super.key, required this.terms});
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final terms = ref.watch(
-      homeScreenVMProvider.select(
-        (state) => state.maybeWhen(
-          data: (s) => s.terms,
-          orElse: () => <TrackedTerm>[],
-        ),
-      ),
-    );
+    // final terms = ref.watch(
+    //   homeScreenVMProvider.select(
+    //     (state) => state.maybeWhen(
+    //       data: (s) => s.terms,
+    //       orElse: () => <TrackedTerm>[],
+    //     ),
+    //   ),
+    // );
     final notifier = ref.read(homeScreenVMProvider.notifier);
     return TermsList(
       terms: [...terms],

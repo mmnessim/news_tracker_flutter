@@ -15,6 +15,8 @@ class TrackedTermsState {
 
   TrackedTermsState({required this.terms, required this.pendingNotifications});
 
+  //TODO: write a function to pass down to TimePickerRow
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
