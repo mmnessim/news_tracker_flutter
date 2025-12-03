@@ -24,7 +24,7 @@ class DefaultBar extends StatelessWidget implements PreferredSizeWidget {
               context: context,
               builder: (context) => AlertDialog(
                 title: Text('Set Notification Time'),
-                content: TimePickerRow(),
+                content: TimePickerRow(onSetTime: onSetTime),
               ),
             );
           },

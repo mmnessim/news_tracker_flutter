@@ -24,7 +24,7 @@ class HomeScreen extends ConsumerWidget {
     final terms = vm.value?.terms;
 
     return Scaffold(
-      appBar: DefaultBar(),
+      appBar: DefaultBar(onSetTime: notifier.updateGlobalNotificationTime),
       drawer: OptionsDrawer(),
       body: PageBodyContainer(
         mainAxisAlignment: MainAxisAlignment.start,

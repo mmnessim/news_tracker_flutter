@@ -19,6 +19,7 @@ class TimePickerRow extends ConsumerWidget {
     );
     if (onSetTime != null && picked != null) {
       onSetTime!(picked);
+      ref.read(notificationTimeProvider.notifier).setNewTime(picked);
       return;
     }
     if (picked != null) {

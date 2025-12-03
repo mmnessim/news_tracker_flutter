@@ -33,6 +33,9 @@ class TrackedTermsState {
 }
 
 class HomeScreenVM extends AsyncNotifier<TrackedTermsState> {
+  late final TrackedTermNotifierLocked _termRepo;
+  late final NotificationNotifier _notificationRepo;
+
   Future<TrackedTermsState> _compose() async {
     final terms = await ref.watch(newTrackedTermsProvider.future);
     final notifications = await ref.read(notificationProvider.future);
@@ -48,6 +51,8 @@ class HomeScreenVM extends AsyncNotifier<TrackedTermsState> {
   @override
   FutureOr<TrackedTermsState> build() {
     final initial = _compose();
+    _termRepo = ref.watch(newTrackedTermsProvider.notifier);
+    _notificationRepo = ref.watch(notificationProvider.notifier);
 
     ref.listen(newTrackedTermsProvider, (_, __) async {
       final newState = await _compose();
@@ -62,9 +67,8 @@ class HomeScreenVM extends AsyncNotifier<TrackedTermsState> {
   }
 
   Future<void> addTrackedTerm(String term, bool locked) async {
-    final repo = ref.read(newTrackedTermsProvider.notifier);
     try {
-      await repo.add(term, locked);
+      await _termRepo.add(term, locked);
       final updatedTerms = await ref.read(newTrackedTermsProvider.future);
       final currentNotifications =
           state.asData?.value.pendingNotifications ??
@@ -81,9 +85,8 @@ class HomeScreenVM extends AsyncNotifier<TrackedTermsState> {
   }
 
   Future<void> removeTrackedTerm(TrackedTerm term) async {
-    final repo = ref.read(newTrackedTermsProvider.notifier);
     try {
-      await repo.remove(term);
+      await _termRepo.remove(term);
       final updatedTerms = await ref.read(newTrackedTermsProvider.future);
       final currentNotifications =
           state.asData?.value.pendingNotifications ??
@@ -100,9 +103,8 @@ class HomeScreenVM extends AsyncNotifier<TrackedTermsState> {
   }
 
   Future<void> toggleLocked(TrackedTerm term) async {
-    final repo = ref.read(newTrackedTermsProvider.notifier);
     try {
-      await repo.toggleLocked(term);
+      await _termRepo.toggleLocked(term);
       final updatedTerms = await ref.read(newTrackedTermsProvider.future);
       final currentNotifications =
           state.asData?.value.pendingNotifications ??
@@ -118,24 +120,34 @@ class HomeScreenVM extends AsyncNotifier<TrackedTermsState> {
     }
   }
 
-  Future<void> updateNotificationTime(
+  Future<void> updateSingleNotificationTime(
     TrackedTerm term,
     TimeOfDay newTime,
   ) async {
-    final notificationRepo = ref.read(notificationProvider.notifier);
-    final termRepo = ref.read(newTrackedTermsProvider.notifier);
-
     final updatedTerm = term.copyWith(notificationTime: newTime);
-    await termRepo.updateTerm(updatedTerm, term.notificationId);
-    await notificationRepo.addNotification(updatedTerm);
+    await _termRepo.updateTerm(updatedTerm, term.notificationId);
+    await _notificationRepo.addNotification(updatedTerm);
 
     final newState = await _compose();
     _updateStateIfChanged(newState);
   }
 
+  // TODO: Review this function
+  Future<void> updateGlobalNotificationTime(TimeOfDay time) async {
+    final allTerms = await _termRepo.getAllTerms();
+    for (final t in allTerms) {
+      if (t.locked) {
+        continue;
+      }
+      final newTerm = t.copyWith(notificationTime: time);
+      _termRepo.updateTerm(newTerm, t.notificationId);
+    }
+    final newState = await _compose();
+    _updateStateIfChanged(newState);
+  }
+
   Future<void> rescheduleAllNotifications() async {
-    final notificationRepo = ref.read(notificationProvider.notifier);
-    await notificationRepo.rescheduleAllNotifications();
+    await _notificationRepo.rescheduleAllNotifications();
 
     final newState = await _compose();
     _updateStateIfChanged(newState);
