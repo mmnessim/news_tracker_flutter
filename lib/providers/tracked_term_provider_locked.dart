@@ -9,7 +9,7 @@ import 'package:news_tracker/utils/notifications/schedule_notification.dart';
 import 'package:news_tracker/utils/preferences.dart';
 import 'package:uuid/uuid.dart';
 
-import '../utils/notifications/notification_id.dart';
+import '../utils/notifications/notification_helpers.dart';
 
 class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
   // TODO: There's probably a better way to do this. Maybe loadSearchTerms()

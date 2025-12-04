@@ -5,8 +5,9 @@ import 'package:news_tracker/model/tracked_term.dart';
 import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
 import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
 import 'package:news_tracker/utils/notifications/notification_details.dart';
-import 'package:news_tracker/utils/notifications/notification_id.dart';
 import 'package:news_tracker/utils/tz_convert.dart';
+
+import 'notification_helpers.dart';
 
 Future<void> scheduleNotificationFromTerm(
   TrackedTerm term,

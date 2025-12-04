@@ -1,4 +1,45 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/timezone.dart' as tz;
+
+import 'initialize_notifications.dart';
+
+Future<List<PendingNotificationRequest>> getPendingNotifications() async {
+  return await notificationsPlugin.pendingNotificationRequests();
+}
+
+Future<PendingNotificationRequest?> getNotificationById(int id) async {
+  final pending = await getPendingNotifications();
+  try {
+    return pending.firstWhere((p) => p.id == id);
+  } catch (_) {
+    return null;
+  }
+}
+
+Future<void> cancelAllNotifications(
+  FlutterLocalNotificationsPlugin? plugin,
+) async {
+  final _plugin = plugin ?? notificationsPlugin;
+  await _plugin.cancelAll();
+}
+
+tz.TZDateTime nextInstanceOfTimeOfDay(TimeOfDay time) {
+  final now = tz.TZDateTime.now(tz.local);
+  var scheduled = tz.TZDateTime(
+    tz.local,
+    now.year,
+    now.month,
+    now.day,
+    time.hour,
+    time.minute,
+  );
+  if (scheduled.isBefore(now)) {
+    scheduled = scheduled.add(const Duration(days: 1));
+  }
+  return scheduled;
+}
 
 const String _kLastNotificationIdKey = 'last_notification_id';
 const String _kActiveNotificationIdsKey = 'active_notification_ids';
