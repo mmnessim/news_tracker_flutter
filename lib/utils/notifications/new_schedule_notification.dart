@@ -40,9 +40,54 @@ class Scheduler {
     if (term.locked) return;
     if (term.notificationTime == null) return;
 
-    await releaseNotificationId(term.notificationId);
-    plugin.cancel(oldNotificationId);
+    await cancelOne(term);
     _schedule(term);
+  }
+
+  Future<void> scheduleMany(List<TrackedTerm> terms) async {
+    final pending = await plugin.pendingNotificationRequests();
+    final scheduleIds = pending.map((n) => n.id).toSet();
+
+    for (final term in terms) {
+      if (term.locked || term.notificationTime == null) {
+        continue;
+      }
+
+      if (scheduleIds.contains(term.notificationId)) {
+        await cancelOne(term);
+      }
+
+      await _schedule(term);
+    }
+  }
+
+  Future<void> cancelMany(List<TrackedTerm> terms) async {
+    final pending = await plugin.pendingNotificationRequests();
+    final scheduleIds = pending.map((n) => n.id).toSet();
+
+    for (final term in terms) {
+      if (term.locked) {
+        continue;
+      }
+
+      if (scheduleIds.contains(term.notificationId)) {
+        await cancelOne(term);
+      }
+    }
+  }
+
+  Future<void> updateMany(List<TrackedTerm> terms) async {
+    final pending = await plugin.pendingNotificationRequests();
+    final scheduleIds = pending.map((n) => n.id).toSet();
+
+    for (final term in terms) {
+      if (term.locked || term.notificationTime == null) {
+        continue;
+      }
+
+      await cancelOne(term);
+      await _schedule(term);
+    }
   }
 
   /// Calculates scheduled and calls plugin.zonedSchedule
