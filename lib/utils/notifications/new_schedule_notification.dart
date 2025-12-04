@@ -107,6 +107,10 @@ class Scheduler {
   }
 }
 
+final schedulerProvider = Provider<Scheduler>(
+  (ref) => Scheduler(plugin: notificationsPlugin),
+);
+
 Future<void> scheduleNotificationFromTerm(
   TrackedTerm term,
   FlutterLocalNotificationsPlugin? plugin,
