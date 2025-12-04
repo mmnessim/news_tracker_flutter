@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/providers/notification_time_provider.dart';
-import 'package:news_tracker/utils/notifications/schedule_notification.dart';
 
 class TimePickerRow extends ConsumerWidget {
   final Future<void> Function(TimeOfDay)? onSetTime;
@@ -17,15 +16,14 @@ class TimePickerRow extends ConsumerWidget {
       context: context,
       initialTime: currentTime,
     );
-    if (onSetTime != null && picked != null) {
+    if (picked == null) return;
+
+    if (onSetTime != null) {
       onSetTime!(picked);
-      ref.read(notificationTimeProvider.notifier).setNewTime(picked);
+      // ref.read(notificationTimeProvider.notifier).setNewTime(picked);
       return;
     }
-    if (picked != null) {
-      ref.read(notificationTimeProvider.notifier).setNewTime(picked);
-    }
-    rescheduleAllNotifications(ref, null);
+    // rescheduleAllNotifications(ref, null);
   }
 
   @override

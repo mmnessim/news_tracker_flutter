@@ -103,6 +103,47 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
     await releaseNotificationId(oldId);
   }
 
+  Future<void> updateMany(List<TrackedTerm> updatedTerms) async {
+    final termStrings = await loadSearchTerms();
+    final current = deserializeTermListHelper(termStrings);
+
+    final currentById = {for (var t in current) t.id: t};
+    final updatedById = {for (var t in updatedTerms) t.id: t};
+
+    final merged = current
+        .map((t) => updatedById.containsKey(t.id) ? updatedById[t.id]! : t)
+        .toList();
+    for (var t in updatedTerms) {
+      if (!currentById.containsKey(t.id)) merged.add(t);
+    }
+
+    state = AsyncValue.data(merged);
+    final updatedStrings = serializeTermListHelper(merged);
+    await saveSearchTerms(updatedStrings);
+
+    for (var newTerm in updatedTerms) {
+      final old = currentById[newTerm.id];
+      if (old == null) {
+        await scheduleNotificationFromTerm(newTerm, notificationsPlugin);
+        continue;
+      }
+
+      if (old.notificationId != newTerm.notificationId) {
+        await cancelNotificationByTerm(old, null);
+        await releaseNotificationId(old.notificationId);
+        await scheduleNotificationFromTerm(newTerm, notificationsPlugin);
+        continue;
+      }
+
+      if (old.notificationTime != newTerm.notificationTime ||
+          old.locked != newTerm.locked ||
+          old.term != newTerm.term) {
+        await cancelNotificationByTerm(old, null);
+        await scheduleNotificationFromTerm(newTerm, notificationsPlugin);
+      }
+    }
+  }
+
   Future<void> toggleLocked(TrackedTerm term) async {
     final current = await loadSearchTerms();
     final termObjects = deserializeTermListHelper(current);

@@ -134,16 +134,26 @@ class HomeScreenVM extends AsyncNotifier<TrackedTermsState> {
 
   Future<void> updateGlobalNotificationTime(TimeOfDay time) async {
     final allTerms = await _termRepo.getAllTerms();
-    final futures = <Future>[];
+    final updatedTerms = <TrackedTerm>[];
     for (final t in allTerms) {
       if (t.locked) {
         continue;
       }
       final newTerm = t.copyWith(notificationTime: time);
-      futures.add(_termRepo.updateTerm(newTerm, t.notificationId));
+      print('${newTerm.term}: ${newTerm.notificationTime}');
+      updatedTerms.add(newTerm);
+      // await _termRepo.updateTerm(newTerm, t.notificationId);
     }
-    await Future.wait(futures);
+
+    await _termRepo.updateMany(updatedTerms);
     final newState = await _compose();
+
+    //
+    final newTerms = newState.terms;
+    for (final t in newTerms) {
+      print('${t.term}: ${t.notificationTime}');
+    }
+
     state = AsyncValue.data(newState);
   }
 
