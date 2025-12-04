@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/model/tracked_term.dart';
 import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
-import 'package:news_tracker/utils/notifications/schedule_notification.dart';
+import 'package:news_tracker/utils/notifications/new_schedule_notification.dart';
 import 'package:news_tracker/utils/preferences.dart';
 import 'package:uuid/uuid.dart';
 

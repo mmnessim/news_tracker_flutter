@@ -9,6 +9,57 @@ import 'package:news_tracker/utils/tz_convert.dart';
 
 import 'notification_helpers.dart';
 
+class Scheduler {
+  FlutterLocalNotificationsPlugin plugin;
+
+  Scheduler({required this.plugin});
+
+  Future<void> scheduleOne(TrackedTerm term) async {
+    if (term.locked) return;
+    if (term.notificationTime == null) return;
+
+    final pending = await plugin.pendingNotificationRequests();
+    // Check for already scheduled and cancel
+    final alreadyScheduled = pending.any((n) => n.id == term.notificationId);
+    if (alreadyScheduled) {
+      await plugin.cancel(term.notificationId);
+    }
+
+    await _schedule(term);
+  }
+
+  Future<void> cancelOne(TrackedTerm term) async {
+    if (term.locked) return;
+    await releaseNotificationId(term.notificationId);
+    await plugin.cancel(term.notificationId);
+  }
+
+  Future<void> updateOne(TrackedTerm term, int oldNotificationId) async {
+    if (term.locked) return;
+    if (term.notificationTime == null) return;
+
+    await releaseNotificationId(term.notificationId);
+    plugin.cancel(oldNotificationId);
+    _schedule(term);
+  }
+
+  /// Calculates scheduled and calls plugin.zonedSchedule
+  Future<void> _schedule(TrackedTerm term) async {
+    final scheduled = timeOfDayToTzDateTime(term.notificationTime!);
+
+    await plugin.zonedSchedule(
+      term.notificationId,
+      'New results for ${term.term}',
+      'Tap here to see more',
+      scheduled,
+      defaultAndroidDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+      payload: term.term,
+    );
+  }
+}
+
 Future<void> scheduleNotificationFromTerm(
   TrackedTerm term,
   FlutterLocalNotificationsPlugin? plugin,
