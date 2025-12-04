@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meta/meta.dart';
 import 'package:news_tracker/model/tracked_term.dart';
 import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
 import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
@@ -9,6 +10,7 @@ import 'package:news_tracker/utils/tz_convert.dart';
 
 import 'notification_helpers.dart';
 
+@experimental
 class Scheduler {
   FlutterLocalNotificationsPlugin plugin;
 
