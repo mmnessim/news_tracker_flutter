@@ -8,14 +8,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/model/tracked_term.dart';
 import 'package:news_tracker/providers/notification_provider.dart';
 import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
+import 'package:news_tracker/utils/notifications/new_schedule_notification.dart';
 
 class TrackedTermsState {
   final List<TrackedTerm> terms;
   final List<PendingNotificationRequest> pendingNotifications;
 
   TrackedTermsState({required this.terms, required this.pendingNotifications});
-
-  //TODO: write a function to pass down to TimePickerRow
 
   @override
   bool operator ==(Object other) {
@@ -34,11 +33,15 @@ class TrackedTermsState {
 
 class HomeScreenVM extends AsyncNotifier<TrackedTermsState> {
   late final TrackedTermNotifierLocked _termRepo;
+
+  // TODO: Remove all usages and remove
   late final NotificationNotifier _notificationRepo;
+  late final Scheduler _scheduler;
 
   Future<TrackedTermsState> _compose() async {
     final terms = await ref.watch(newTrackedTermsProvider.future);
-    final notifications = await ref.read(notificationProvider.future);
+    // final notifications = await ref.read(notificationProvider.future);
+    final notifications = await _scheduler.getPending();
     return TrackedTermsState(terms: terms, pendingNotifications: notifications);
   }
 
@@ -53,6 +56,7 @@ class HomeScreenVM extends AsyncNotifier<TrackedTermsState> {
     final initial = _compose();
     _termRepo = ref.watch(newTrackedTermsProvider.notifier);
     _notificationRepo = ref.watch(notificationProvider.notifier);
+    _scheduler = ref.watch(schedulerProvider);
 
     ref.listen(newTrackedTermsProvider, (_, __) async {
       final newState = await _compose();
@@ -126,8 +130,7 @@ class HomeScreenVM extends AsyncNotifier<TrackedTermsState> {
   ) async {
     final updatedTerm = term.copyWith(notificationTime: newTime);
     await _termRepo.updateTerm(updatedTerm, term.notificationId);
-    await _notificationRepo.addNotification(updatedTerm);
-
+    await _scheduler.scheduleOne(updatedTerm);
     final newState = await _compose();
     _updateStateIfChanged(newState);
   }
@@ -140,20 +143,12 @@ class HomeScreenVM extends AsyncNotifier<TrackedTermsState> {
         continue;
       }
       final newTerm = t.copyWith(notificationTime: time);
-      print('${newTerm.term}: ${newTerm.notificationTime}');
       updatedTerms.add(newTerm);
-      // await _termRepo.updateTerm(newTerm, t.notificationId);
     }
 
     await _termRepo.updateMany(updatedTerms);
+    await _scheduler.scheduleMany(updatedTerms);
     final newState = await _compose();
-
-    //
-    final newTerms = newState.terms;
-    for (final t in newTerms) {
-      print('${t.term}: ${t.notificationTime}');
-    }
-
     state = AsyncValue.data(newState);
   }
 
