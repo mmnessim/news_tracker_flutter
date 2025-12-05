@@ -29,13 +29,14 @@ class HomeScreen extends ConsumerWidget {
       body: PageBodyContainer(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          // Text('Length: ${terms.length}'),
-          TermsListContainer(terms: terms ?? []),
-          Spacer(),
+          Expanded(child: TermsListContainer(terms: terms ?? [])),
           Padding(
             padding: const EdgeInsets.only(bottom: 32, left: 8, right: 8),
-            child: TermInput(
-              onAdd: (term, flag) => notifier.addTrackedTerm(term, flag),
+            child: SafeArea(
+              top: false,
+              child: TermInput(
+                onAdd: (term, flag) => notifier.addTrackedTerm(term, flag),
+              ),
             ),
           ),
         ],

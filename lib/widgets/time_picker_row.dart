@@ -23,7 +23,6 @@ class TimePickerRow extends ConsumerWidget {
       ref.read(notificationTimeProvider.notifier).setNewTime(picked);
       return;
     }
-    // rescheduleAllNotifications(ref, null);
   }
 
   @override

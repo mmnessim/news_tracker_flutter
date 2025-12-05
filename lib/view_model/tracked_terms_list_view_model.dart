@@ -34,8 +34,6 @@ class TrackedTermsState {
 class HomeScreenVM extends AsyncNotifier<TrackedTermsState> {
   late final TrackedTermNotifierLocked _termRepo;
 
-  // TODO: Remove all usages and remove
-  late final NotificationNotifier _notificationRepo;
   late final Scheduler _scheduler;
 
   Future<TrackedTermsState> _compose() async {
@@ -55,7 +53,6 @@ class HomeScreenVM extends AsyncNotifier<TrackedTermsState> {
   FutureOr<TrackedTermsState> build() {
     final initial = _compose();
     _termRepo = ref.watch(newTrackedTermsProvider.notifier);
-    _notificationRepo = ref.watch(notificationProvider.notifier);
     _scheduler = ref.watch(schedulerProvider);
 
     ref.listen(newTrackedTermsProvider, (_, __) async {
@@ -150,13 +147,6 @@ class HomeScreenVM extends AsyncNotifier<TrackedTermsState> {
     await _scheduler.scheduleMany(updatedTerms);
     final newState = await _compose();
     state = AsyncValue.data(newState);
-  }
-
-  Future<void> rescheduleAllNotifications() async {
-    await _notificationRepo.rescheduleAllNotifications();
-
-    final newState = await _compose();
-    _updateStateIfChanged(newState);
   }
 }
 
