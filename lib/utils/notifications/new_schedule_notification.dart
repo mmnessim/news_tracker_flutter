@@ -13,9 +13,19 @@ import 'notification_helpers.dart';
 @experimental
 class Scheduler {
   FlutterLocalNotificationsPlugin plugin;
+  final _details = const NotificationDetails(
+    android: AndroidNotificationDetails(
+      'default_channel',
+      'Default',
+      importance: Importance.max,
+      priority: Priority.high,
+    ),
+  );
 
   Scheduler({required this.plugin});
 
+  /// Schedules or reschedules one notification
+  /// Does not release notification ID before rescheduling
   Future<void> scheduleOne(TrackedTerm term) async {
     if (term.locked) return;
     if (term.notificationTime == null) return;
@@ -30,18 +40,11 @@ class Scheduler {
     await _schedule(term);
   }
 
+  /// Cancels and releases notification ID
   Future<void> cancelOne(TrackedTerm term) async {
     if (term.locked) return;
     await releaseNotificationId(term.notificationId);
     await plugin.cancel(term.notificationId);
-  }
-
-  Future<void> updateOne(TrackedTerm term, int oldNotificationId) async {
-    if (term.locked) return;
-    if (term.notificationTime == null) return;
-
-    await cancelOne(term);
-    _schedule(term);
   }
 
   Future<void> scheduleMany(List<TrackedTerm> terms) async {
@@ -76,17 +79,16 @@ class Scheduler {
     }
   }
 
-  Future<void> updateMany(List<TrackedTerm> terms) async {
-    final pending = await plugin.pendingNotificationRequests();
-    final scheduleIds = pending.map((n) => n.id).toSet();
+  Future<List<PendingNotificationRequest>> getPending() async {
+    return await plugin.pendingNotificationRequests();
+  }
 
-    for (final term in terms) {
-      if (term.locked || term.notificationTime == null) {
-        continue;
-      }
-
-      await cancelOne(term);
-      await _schedule(term);
+  Future<PendingNotificationRequest?> getPendingById(int id) async {
+    final pending = await getPending();
+    try {
+      return pending.firstWhere((p) => p.id == id);
+    } catch (_) {
+      return null;
     }
   }
 
@@ -99,7 +101,7 @@ class Scheduler {
       'New results for ${term.term}',
       'Tap here to see more',
       scheduled,
-      defaultAndroidDetails,
+      _details,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       matchDateTimeComponents: DateTimeComponents.time,
       payload: term.term,
@@ -110,6 +112,11 @@ class Scheduler {
 final schedulerProvider = Provider<Scheduler>(
   (ref) => Scheduler(plugin: notificationsPlugin),
 );
+
+////////////////////////////////////////////////////////////////////////////////
+// This is all old implementation of notification handling and will be marked //
+// Deprecated and eventually removed                                          //
+////////////////////////////////////////////////////////////////////////////////
 
 Future<void> scheduleNotificationFromTerm(
   TrackedTerm term,
