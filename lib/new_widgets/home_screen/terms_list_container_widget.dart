@@ -32,6 +32,7 @@ class TermsListContainer extends ConsumerWidget {
       },
       onDelete: (term) => notifier.removeTrackedTerm(term),
       onToggleLocked: (term) => notifier.toggleLocked(term),
+      onSetTime: notifier.updateSingleNotificationTime,
     );
   }
 }

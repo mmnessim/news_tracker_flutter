@@ -8,6 +8,7 @@ class TermsList extends StatelessWidget {
   final Future<void> Function(TrackedTerm) onViewDetails;
   final Future<void> Function(TrackedTerm) onToggleLocked;
   final Future<void> Function(TrackedTerm) onDelete;
+  final Future<void> Function(TrackedTerm, TimeOfDay) onSetTime;
 
   const TermsList({
     super.key,
@@ -15,6 +16,7 @@ class TermsList extends StatelessWidget {
     required this.onViewDetails,
     required this.onToggleLocked,
     required this.onDelete,
+    required this.onSetTime,
   });
 
   @override
@@ -36,6 +38,7 @@ class TermsList extends StatelessWidget {
               onViewDetails: onViewDetails,
               onToggleLocked: onToggleLocked,
               onDelete: onDelete,
+              onSetTime: onSetTime,
             ),
           ),
         ),
