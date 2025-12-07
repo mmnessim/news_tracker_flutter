@@ -54,7 +54,15 @@ class TermTile extends StatelessWidget {
             ),
             IconButton(
               icon: Icon(Icons.delete_outline),
-              onPressed: () => term.locked ? [] : onDelete(term),
+              onPressed: () {
+                if (term.locked) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Cannot delete locked term')),
+                  );
+                  return;
+                }
+                term.locked ? [] : onDelete(term);
+              },
             ),
           ],
         ),
