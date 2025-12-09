@@ -53,7 +53,6 @@ void main() {
   ProviderContainer createContainer() {
     final container = ProviderContainer(
       overrides: [
-        // Wrap the mock object in AsyncValue.data to match the FutureProvider's output type
         sharedPrefsProvider.overrideWith(
           (ref) => Future.value(mockSharedPreferences),
         ),
@@ -67,7 +66,6 @@ void main() {
     test(
       'build method correctly loads and deserializes terms from preferences',
       () async {
-        // ARRANGE: Set up the mock to return our test data
         when(
           () => mockSharedPreferences.getStringList('searchTerms'),
         ).thenReturn(termsAsJsonStrings);
@@ -84,5 +82,80 @@ void main() {
         expect(result.last.term, 'Riverpod');
       },
     );
+
+    test(
+      'deserializeTermListHelper ignores invalid JSON and returns TrackedTerm list',
+      () {
+        final container = createContainer();
+        final notifier = container.read(newTrackedTermsProvider.notifier);
+
+        final jsonList = [
+          jsonEncode(term1.toJson()),
+          'not-a-json',
+          jsonEncode(term2.toJson()),
+        ];
+
+        final result = notifier.deserializeTermListHelper(jsonList);
+
+        expect(result.length, 2);
+        expect(result[0].id, term1.id);
+        expect(result[1].id, term2.id);
+      },
+    );
+
+    test(
+      'serializeTermListHelper encodes TrackedTerm list to JSON strings',
+      () {
+        final container = createContainer();
+        final notifier = container.read(newTrackedTermsProvider.notifier);
+
+        final input = [term1, term2];
+        final result = notifier.serializeTermListHelper(input);
+
+        expect(result.length, 2);
+
+        final decoded0 = jsonDecode(result[0]) as Map<String, dynamic>;
+        final decoded1 = jsonDecode(result[1]) as Map<String, dynamic>;
+
+        expect(decoded0['id'], term1.id);
+        expect(decoded1['id'], term2.id);
+      },
+    );
+
+    test('toggleLocked flips locked flag and persists updated list', () async {
+      when(
+        () => mockSharedPreferences.getStringList('searchTerms'),
+      ).thenReturn(termsAsJsonStrings);
+
+      when(
+        () => mockSharedPreferences.setStringList(
+          'searchTerms',
+          any<List<String>>(),
+        ),
+      ).thenAnswer((_) async => true);
+
+      final container = createContainer();
+      final notifier = container.read(newTrackedTermsProvider.notifier);
+
+      await notifier.toggleLocked(term1);
+
+      final updated = await container.read(newTrackedTermsProvider.future);
+      expect(updated.length, 2);
+      final updatedTerm = updated.firstWhere((t) => t.id == term1.id);
+      expect(updatedTerm.locked, true);
+
+      final captured = verify(
+        () => mockSharedPreferences.setStringList(
+          'searchTerms',
+          captureAny<List<String>>(),
+        ),
+      ).captured;
+
+      expect(captured.length, 1);
+      final savedList = captured.first as List<String>;
+      final decoded = jsonDecode(savedList.first) as Map<String, dynamic>;
+      expect(decoded['id'], term1.id);
+      expect(decoded['locked'], true);
+    });
   });
 }
