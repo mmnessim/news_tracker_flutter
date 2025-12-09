@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../about.dart';
+import 'package:news_tracker/screens/about_screen.dart';
 
 class OptionsDrawer extends StatelessWidget {
   const OptionsDrawer({super.key});
@@ -32,7 +31,7 @@ class OptionsDrawer extends StatelessWidget {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AboutPage()),
+                MaterialPageRoute(builder: (context) => AboutScreen()),
               );
             },
           ),
