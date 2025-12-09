@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
 import 'package:news_tracker/utils/notifications/old_schedule_notifications.dart';
-import 'package:news_tracker/utils/notifications/pending_notifications.dart';
 import 'package:news_tracker/utils/preferences.dart';
 import 'package:news_tracker/utils/tz_convert.dart';
 
+import 'notification_helpers.dart';
 import 'notification_spec.dart';
 
 // TODO: Probably needs to be reworked due to TrackedTerm rework
@@ -28,7 +28,6 @@ Future<void> clearAndRescheduleNotifications({
         await loadNotificationTime() ?? TimeOfDay.now(),
       ),
     );
-    // notifyNotificationReschedule(terms.indexOf(term));
     await scheduleNotificationWithId(spec, _plugin);
   }
 }

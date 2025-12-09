@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
 import 'package:news_tracker/utils/notifications/notification_details.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+import 'notification_helpers.dart';
 import 'notification_spec.dart';
 
 @Deprecated('Use scheduleNotificationFromTerm instead')
@@ -45,20 +45,4 @@ Future<void> scheduleNotificationWithId(
     matchDateTimeComponents: notificationSpec.repeat ?? DateTimeComponents.time,
     payload: payloadJson,
   );
-}
-
-tz.TZDateTime nextInstanceOfTimeOfDay(TimeOfDay time) {
-  final now = tz.TZDateTime.now(tz.local);
-  var scheduled = tz.TZDateTime(
-    tz.local,
-    now.year,
-    now.month,
-    now.day,
-    time.hour,
-    time.minute,
-  );
-  if (scheduled.isBefore(now)) {
-    scheduled = scheduled.add(const Duration(days: 1));
-  }
-  return scheduled;
 }

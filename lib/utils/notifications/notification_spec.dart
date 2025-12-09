@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:news_tracker/utils/notifications/old_schedule_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 import '../../model/tracked_term.dart';
+import 'notification_helpers.dart';
 
 class NotificationSpec {
   final int id;

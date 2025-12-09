@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../time_picker_row.dart';
 
 class DefaultBar extends StatelessWidget implements PreferredSizeWidget {
-  const DefaultBar({super.key});
+  final Future<void> Function(TimeOfDay)? onSetTime;
+
+  const DefaultBar({super.key, this.onSetTime});
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -22,7 +24,7 @@ class DefaultBar extends StatelessWidget implements PreferredSizeWidget {
               context: context,
               builder: (context) => AlertDialog(
                 title: Text('Set Notification Time'),
-                content: TimePickerRow(),
+                content: TimePickerRow(onSetTime: onSetTime),
               ),
             );
           },

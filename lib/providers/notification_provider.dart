@@ -3,10 +3,9 @@ import 'dart:async';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/model/tracked_term.dart';
-import 'package:news_tracker/utils/notifications/initialize_notifications.dart';
 
-import '../utils/notifications/pending_notifications.dart';
-import '../utils/notifications/schedule_notification.dart';
+import '../utils/notifications/new_schedule_notification.dart';
+import '../utils/notifications/notification_helpers.dart';
 
 class NotificationNotifier
     extends AsyncNotifier<List<PendingNotificationRequest>> {
