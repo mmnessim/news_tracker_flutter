@@ -21,6 +21,7 @@ class MockNotificationHelpers {
 }
 
 void main() {
+  TestWidgetsFlutterBinding.ensureInitialized();
   late MockSharedPreferences mockSharedPreferences;
 
   final term1 = TrackedTerm(
@@ -61,6 +62,10 @@ void main() {
     addTearDown(container.dispose);
     return container;
   }
+
+  setUpAll(() {
+    SharedPreferences.setMockInitialValues(<String, Object>{});
+  });
 
   group('TrackedTermNotifierLocked Tests', () {
     test(
@@ -156,6 +161,31 @@ void main() {
       final decoded = jsonDecode(savedList.first) as Map<String, dynamic>;
       expect(decoded['id'], term1.id);
       expect(decoded['locked'], true);
+    });
+
+    test('updateTerm correctly updates term', () async {
+      when(
+        () => mockSharedPreferences.getStringList('searchTerms'),
+      ).thenReturn(termsAsJsonStrings);
+
+      when(
+        () => mockSharedPreferences.setStringList(
+          'searchTerms',
+          any<List<String>>(),
+        ),
+      ).thenAnswer((_) async => true);
+
+      final container = createContainer();
+      final notifier = container.read(newTrackedTermsProvider.notifier);
+
+      final changeTerm = term1.copyWith(term: "Kotlin");
+
+      await notifier.updateTerm(changeTerm, term1.notificationId);
+
+      final updated = await container.read(newTrackedTermsProvider.future);
+      expect(updated.length, 2);
+      final updatedTerm = updated.firstWhere((t) => t.id == term1.id);
+      expect(updatedTerm.term, "Kotlin");
     });
   });
 }

@@ -58,7 +58,6 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
       locked: locked,
       notificationTime: time,
     );
-    print(termObj.notificationTime);
     final jsonString = jsonEncode(termObj);
     final prefs = await _getPrefs();
     final current = prefs.getStringList(_searchTermsKey) ?? [];
