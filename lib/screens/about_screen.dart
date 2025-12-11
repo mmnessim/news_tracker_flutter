@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:news_tracker/widgets/coreui/app_bar.dart';
+import 'package:news_tracker/new_widgets/shared/app_bar.dart';
 
 class AboutScreen extends StatefulWidget {
   const AboutScreen({super.key});

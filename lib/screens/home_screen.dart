@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:news_tracker/new_widgets/shared/app_bar.dart';
+import 'package:news_tracker/new_widgets/shared/drawer.dart';
+import 'package:news_tracker/new_widgets/shared/page_body_container.dart';
 import 'package:news_tracker/view_model/tracked_terms_list_view_model.dart';
-import 'package:news_tracker/widgets/coreui/app_bar.dart';
-import 'package:news_tracker/widgets/coreui/drawer.dart';
-import 'package:news_tracker/widgets/page_body_container.dart';
 
 import '../new_widgets/home_screen/term_inputs_widget.dart';
 import '../new_widgets/home_screen/terms_list_container_widget.dart';

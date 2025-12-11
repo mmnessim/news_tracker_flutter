@@ -7,15 +7,16 @@ import 'package:news_tracker/providers/notification_provider.dart';
 
 import '../../utils/notifications/notification_helpers.dart';
 
-class NotificationDetails extends ConsumerStatefulWidget {
-  const NotificationDetails({super.key});
+class NotificationDetailsWidget extends ConsumerStatefulWidget {
+  const NotificationDetailsWidget({super.key});
 
   @override
-  ConsumerState<NotificationDetails> createState() =>
+  ConsumerState<NotificationDetailsWidget> createState() =>
       _NotificationDetailsState();
 }
 
-class _NotificationDetailsState extends ConsumerState<NotificationDetails> {
+class _NotificationDetailsState
+    extends ConsumerState<NotificationDetailsWidget> {
   bool _listenerRegistered = false;
 
   @override

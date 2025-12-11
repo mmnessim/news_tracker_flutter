@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/new_widgets/home_screen/terms_list_widget.dart';
 
-import '../../details.dart';
 import '../../model/tracked_term.dart';
+import '../../screens/details_screen.dart';
 import '../../view_model/tracked_terms_list_view_model.dart';
 
 class TermsListContainer extends ConsumerWidget {

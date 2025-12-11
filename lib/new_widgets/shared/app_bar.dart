@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../time_picker_row.dart';
+import 'time_picker_row.dart';
 
 class DefaultBar extends StatelessWidget implements PreferredSizeWidget {
   final Future<void> Function(TimeOfDay)? onSetTime;
