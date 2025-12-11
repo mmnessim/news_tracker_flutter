@@ -10,7 +10,6 @@ class AboutPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Watch the provider to trigger loading (value isn't rendered here).
     ref.watch(newTrackedTermsProvider);
 
     return Scaffold(
