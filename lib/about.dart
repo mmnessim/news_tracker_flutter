@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:news_tracker/new_widgets/notification_widgets/notification_details.dart';
-import 'package:news_tracker/new_widgets/shared/time_picker_row.dart';
 import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
+import 'package:news_tracker/widgets/notification_widgets/notification_details.dart';
+import 'package:news_tracker/widgets/shared/time_picker_row.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutPage extends ConsumerWidget {
