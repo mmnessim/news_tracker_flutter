@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:news_tracker/new_widgets/home_screen/terms_list_widget.dart';
+import 'package:news_tracker/widgets/home_screen/terms_list_widget.dart';
 
 import '../../model/tracked_term.dart';
 import '../../screens/details_screen.dart';
