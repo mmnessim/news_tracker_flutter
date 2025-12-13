@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/model/news_response.dart';
 import 'package:news_tracker/model/tracked_term.dart';
+import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
 import 'package:news_tracker/view_model/details_view_model.dart';
 import 'package:news_tracker/widgets/shared/page_body_container.dart';
 
@@ -35,8 +36,22 @@ class DetailsPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final contentAsync = ref.watch(newsProvider(term));
     final vm = ref.watch(detailsViewModelProvider(term.term));
+
+    ref.listen<AsyncValue<NewsResponse?>>(detailsViewModelProvider(term.term), (
+      prev,
+      next,
+    ) {
+      final articles = next.asData?.value?.articles;
+      if (articles != null && articles.isNotEmpty) {
+        final newTerm = term.copyWith(
+          lastPublishedAt: articles.first.publishedAt,
+        );
+        ref
+            .read(newTrackedTermsProvider.notifier)
+            .updateTerm(newTerm, term.notificationId);
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(

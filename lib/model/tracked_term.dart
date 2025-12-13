@@ -5,7 +5,7 @@ class TrackedTerm {
   final int notificationId;
   final String id;
   final bool locked;
-  final String? lastArticleHash;
+  final String? lastPublishedAt;
   final TimeOfDay? notificationTime;
 
   TrackedTerm({
@@ -13,7 +13,7 @@ class TrackedTerm {
     required this.notificationId,
     required this.id,
     this.locked = false,
-    this.lastArticleHash,
+    this.lastPublishedAt,
     this.notificationTime,
   });
 
@@ -22,7 +22,7 @@ class TrackedTerm {
     int? notificationId,
     String? id,
     bool? locked,
-    String? lastArticleHash,
+    String? lastPublishedAt,
     TimeOfDay? notificationTime,
   }) {
     return TrackedTerm(
@@ -30,7 +30,7 @@ class TrackedTerm {
       notificationId: notificationId ?? this.notificationId,
       id: id ?? this.id,
       locked: locked ?? this.locked,
-      lastArticleHash: lastArticleHash ?? this.lastArticleHash,
+      lastPublishedAt: lastPublishedAt ?? this.lastPublishedAt,
       notificationTime: notificationTime ?? this.notificationTime,
     );
   }
@@ -47,7 +47,7 @@ class TrackedTerm {
               minute: json['notificationTime']['minute'],
             )
           : null,
-      lastArticleHash: json['lastArticleHash'],
+      lastPublishedAt: json['lastArticleHash'],
     );
   }
 
@@ -57,11 +57,8 @@ class TrackedTerm {
     'id': id,
     'locked': locked,
     'notificationTime': notificationTime != null
-        ? {
-            'hour': notificationTime!.hour,
-            'minute': notificationTime!.minute,
-          }
+        ? {'hour': notificationTime!.hour, 'minute': notificationTime!.minute}
         : null,
-    'lastArticleHash': lastArticleHash,
+    'lastArticleHash': lastPublishedAt,
   };
 }
