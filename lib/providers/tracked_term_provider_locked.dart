@@ -56,6 +56,7 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
       notificationId: await getNextNotificationId(),
       id: id,
       locked: locked,
+      hasNewArticle: true,
       notificationTime: time,
     );
     final jsonString = jsonEncode(termObj);
@@ -112,7 +113,8 @@ class TrackedTermNotifierLocked extends AsyncNotifier<List<TrackedTerm>> {
 
     final updatedStrings = serializeTermListHelper(updated);
     await prefs.setStringList(_searchTermsKey, updatedStrings);
-    await releaseNotificationId(oldId);
+    // TODO: does this need to be called or not?
+    // await releaseNotificationId(oldId);
   }
 
   Future<void> updateMany(List<TrackedTerm> updatedTerms) async {

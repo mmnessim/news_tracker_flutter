@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/providers/news_helper.dart';
 import 'package:news_tracker/providers/tracked_term_provider_locked.dart';
@@ -6,6 +7,9 @@ import 'package:workmanager/workmanager.dart';
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
+  WidgetsFlutterBinding.ensureInitialized();
+  // TODO: Ensure notifications are initialized
+
   Workmanager().executeTask((task, inputData) async {
     switch (task) {
       case 'check_new_article':
@@ -38,6 +42,7 @@ Future<void> checkForNewArticles() async {
           print('Setting lastPublishedAt initially for ${term.term}');
           final updated = term.copyWith(
             lastPublishedAt: articles.first.publishedAt,
+            hasNewArticle: true,
           );
           final termProvider = container.read(newTrackedTermsProvider.notifier);
           await termProvider.updateTerm(updated, term.notificationId);
@@ -51,14 +56,28 @@ Future<void> checkForNewArticles() async {
           print('Updating lastPublishedAt for ${term.term}');
           final updated = term.copyWith(
             lastPublishedAt: articles.first.publishedAt,
+            hasNewArticle: true,
           );
           final termProvider = container.read(newTrackedTermsProvider.notifier);
           await termProvider.updateTerm(updated, term.notificationId);
 
           final scheduler = container.read(schedulerProvider);
           await scheduler.scheduleOne(updated);
+          print('Scheduled for ${term.term}');
           continue;
         }
+
+        // TODO: handle no new article better
+        final updated = term.copyWith(
+          lastPublishedAt: articles.first.publishedAt,
+          hasNewArticle: false,
+        );
+        final termProvider = container.read(newTrackedTermsProvider.notifier);
+        await termProvider.updateTerm(updated, term.notificationId);
+
+        final scheduler = container.read(schedulerProvider);
+        await scheduler.scheduleOne(updated);
+        continue;
       }
     }
   } finally {

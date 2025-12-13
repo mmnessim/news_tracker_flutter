@@ -15,7 +15,7 @@ Future<void> main() async {
   Workmanager().registerOneOffTask(
     'initial_check',
     'check_new_article',
-    initialDelay: Duration(seconds: 10),
+    initialDelay: Duration(seconds: 30),
   );
 
   Workmanager().registerPeriodicTask(

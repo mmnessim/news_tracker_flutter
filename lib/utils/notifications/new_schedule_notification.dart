@@ -96,16 +96,39 @@ class Scheduler {
   Future<void> _schedule(TrackedTerm term) async {
     final scheduled = timeOfDayToTzDateTime(term.notificationTime!);
 
-    await plugin.zonedSchedule(
-      term.notificationId,
-      'New results for ${term.term}',
-      'Tap here to see more',
-      scheduled,
-      _details,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      matchDateTimeComponents: DateTimeComponents.time,
-      payload: term.term,
-    );
+    if (term.hasNewArticle) {
+      await plugin.zonedSchedule(
+        term.notificationId,
+        'New results for ${term.term}',
+        'Tap here to see more',
+        scheduled,
+        _details,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.time,
+        payload: term.term,
+      );
+      final container = ProviderContainer();
+      try {
+        final newTerm = term.copyWith(hasNewArticle: false);
+        await container
+            .read(newTrackedTermsProvider.notifier)
+            .updateTerm(newTerm, term.notificationId);
+      } finally {
+        container.dispose();
+      }
+    } else {
+      // TODO: handle no new articles
+      await plugin.zonedSchedule(
+        term.notificationId,
+        'No new results for ${term.term}',
+        'Womp womp',
+        scheduled,
+        _details,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        matchDateTimeComponents: DateTimeComponents.time,
+        payload: term.term,
+      );
+    }
   }
 }
 
