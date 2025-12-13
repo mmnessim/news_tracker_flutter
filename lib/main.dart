@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:news_tracker/screens/home_screen.dart';
 import 'package:news_tracker/utils/initialize_app.dart';
+import 'package:news_tracker/utils/workmanager/task_handler.dart';
+import 'package:workmanager/workmanager.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -9,6 +11,19 @@ final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 /// Loads environment variables and runs the app.
 Future<void> main() async {
   bool showPermissionDialog = await initializeApp(navigatorKey);
+  Workmanager().initialize(callbackDispatcher);
+  Workmanager().registerOneOffTask(
+    'initial_check',
+    'check_new_article',
+    initialDelay: Duration(seconds: 10),
+  );
+
+  Workmanager().registerPeriodicTask(
+    'regular_check',
+    'check_new_article',
+    frequency: Duration(hours: 12),
+  );
+
   runApp(
     ProviderScope(
       child: NewsTracker(showPermissionDialog: showPermissionDialog),
