@@ -57,4 +57,35 @@ void main() {
 
     expect(find.text(newTerm), findsOneWidget);
   });
+
+  testWidgets('permissionCallback shows dialog and dismisses on Okay', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(home: HomeScreen(showPermissionDialog: true)),
+      ),
+    );
+
+    await tester.pump();
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AlertDialog), findsOneWidget);
+    expect(find.text('Notification Permission'), findsOneWidget);
+    expect(find.widgetWithText(TextButton, 'OK'), findsOneWidget);
+
+    final contentFinder = find.byWidgetPredicate(
+      (w) =>
+          w is Text &&
+          (w.data ?? '').contains(
+            'Notification permission is permanently denied',
+          ),
+    );
+    expect(contentFinder, findsOneWidget);
+
+    await tester.tap(find.widgetWithText(TextButton, 'OK'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(AlertDialog), findsNothing);
+  });
 }
