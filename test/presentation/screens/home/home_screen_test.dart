@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:news_tracker/presentation/screens/home/home_screen.dart';
 import 'package:news_tracker/presentation/screens/home/term_inputs_widget.dart';
-import 'package:news_tracker/presentation/screens/home/terms_list_container_widget.dart';
+import 'package:news_tracker/presentation/screens/home/terms_list_widget.dart';
 import 'package:news_tracker/presentation/shared_widgets/app_bar.dart';
 
 void main() {
@@ -19,8 +19,7 @@ void main() {
     );
 
     expect(find.byType(DefaultBar), findsOneWidget);
-    // expect(find.byType(OptionsDrawer), findsOneWidget);
-    expect(find.byType(TermsListContainer), findsOneWidget);
+    expect(find.byType(TermsList), findsOneWidget);
 
     final termInput = find.byType(TermInput);
     expect(termInput, findsOneWidget);

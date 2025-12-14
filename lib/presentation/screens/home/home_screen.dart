@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:news_tracker/presentation/screens/home/terms_list_widget.dart';
 import 'package:news_tracker/presentation/shared_widgets/app_bar.dart';
 import 'package:news_tracker/presentation/shared_widgets/drawer.dart';
 import 'package:news_tracker/presentation/shared_widgets/page_body_container.dart';
 import 'package:news_tracker/view_model/tracked_terms_list_view_model.dart';
 
+import '../details/details_screen.dart';
 import 'term_inputs_widget.dart';
-import 'terms_list_container_widget.dart';
 
 class HomeScreen extends ConsumerWidget {
   final bool showPermissionDialog;
@@ -29,7 +30,20 @@ class HomeScreen extends ConsumerWidget {
       body: PageBodyContainer(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Expanded(child: TermsListContainer(terms: terms ?? [])),
+          Expanded(
+            child: TermsList(
+              terms: terms ?? [],
+              onViewDetails: (term) async {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => DetailsPage(term: term)),
+                );
+              },
+              onDelete: (term) => notifier.removeTrackedTerm(term),
+              onToggleLocked: (term) => notifier.toggleLocked(term),
+              onSetTime: notifier.updateSingleNotificationTime,
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(bottom: 32, left: 8, right: 8),
             child: SafeArea(
