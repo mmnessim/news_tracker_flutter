@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:news_tracker/screens/about_screen.dart';
+import 'package:news_tracker/presentation/screens/about/about_screen.dart';
 
 class OptionsDrawer extends StatelessWidget {
   const OptionsDrawer({super.key});

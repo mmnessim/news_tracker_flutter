@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:news_tracker/providers/notification_provider.dart';
 
-import '../../utils/notifications/notification_helpers.dart';
+import '../../../utils/notifications/notification_helpers.dart';
 
 class NotificationDetailsWidget extends ConsumerStatefulWidget {
   const NotificationDetailsWidget({super.key});

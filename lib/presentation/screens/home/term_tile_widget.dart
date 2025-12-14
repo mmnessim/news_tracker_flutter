@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../model/tracked_term.dart';
+import '../../../model/tracked_term.dart';
 import 'individual_time_picker_row_widget.dart';
 
 class TermTile extends StatelessWidget {

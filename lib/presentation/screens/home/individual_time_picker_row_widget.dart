@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../model/tracked_term.dart';
+import '../../../model/tracked_term.dart';
 
 class IndividualTimePicker extends StatelessWidget {
   final TrackedTerm term;

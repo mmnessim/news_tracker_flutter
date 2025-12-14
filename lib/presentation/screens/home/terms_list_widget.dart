@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:news_tracker/widgets/home_screen/term_tile_widget.dart';
+import 'package:news_tracker/presentation/screens/home/term_tile_widget.dart';
 
-import '../../model/tracked_term.dart';
+import '../../../model/tracked_term.dart';
 
 class TermsList extends StatelessWidget {
   final List<TrackedTerm> terms;

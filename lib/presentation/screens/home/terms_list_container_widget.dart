@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:news_tracker/widgets/home_screen/terms_list_widget.dart';
+import 'package:news_tracker/presentation/screens/home/terms_list_widget.dart';
 
-import '../../model/tracked_term.dart';
-import '../../screens/details_screen.dart';
-import '../../view_model/tracked_terms_list_view_model.dart';
+import '../../../model/tracked_term.dart';
+import '../../../view_model/tracked_terms_list_view_model.dart';
+import '../details/details_screen.dart';
 
 class TermsListContainer extends ConsumerWidget {
   final List<TrackedTerm> terms;

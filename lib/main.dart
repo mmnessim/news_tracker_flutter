@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:news_tracker/screens/home_screen.dart';
+import 'package:news_tracker/presentation/screens/home/home_screen.dart';
 import 'package:news_tracker/utils/initialize_app.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();

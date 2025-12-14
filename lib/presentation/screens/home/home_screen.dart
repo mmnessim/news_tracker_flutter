@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:news_tracker/presentation/shared_widgets/app_bar.dart';
+import 'package:news_tracker/presentation/shared_widgets/drawer.dart';
+import 'package:news_tracker/presentation/shared_widgets/page_body_container.dart';
 import 'package:news_tracker/view_model/tracked_terms_list_view_model.dart';
-import 'package:news_tracker/widgets/shared/app_bar.dart';
-import 'package:news_tracker/widgets/shared/drawer.dart';
-import 'package:news_tracker/widgets/shared/page_body_container.dart';
 
-import '../widgets/home_screen/term_inputs_widget.dart';
-import '../widgets/home_screen/terms_list_container_widget.dart';
+import 'term_inputs_widget.dart';
+import 'terms_list_container_widget.dart';
 
 class HomeScreen extends ConsumerWidget {
   final bool showPermissionDialog;

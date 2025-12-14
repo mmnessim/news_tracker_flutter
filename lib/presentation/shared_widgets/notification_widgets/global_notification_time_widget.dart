@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:news_tracker/widgets/shared/time_picker_row.dart';
+import 'package:news_tracker/presentation/shared_widgets/time_picker_row.dart';
 
 class GlobalNotificationTimeWidget extends StatelessWidget {
   final TimeOfDay time;
