@@ -7,7 +7,7 @@ import 'package:news_tracker/presentation/shared_widgets/page_body_container.dar
 import 'package:news_tracker/view_model/tracked_terms_list_view_model.dart';
 
 import '../details/details_screen.dart';
-import 'term_inputs_widget.dart';
+import 'term_input_widget.dart';
 
 class HomeScreen extends ConsumerWidget {
   final bool showPermissionDialog;

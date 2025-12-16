@@ -24,6 +24,7 @@ class TermTile extends StatelessWidget {
     return InkWell(
       onTap: () => onViewDetails(term),
       child: ListTile(
+        tileColor: Theme.of(context).colorScheme.onTertiaryContainer,
         title: Text(term.term),
         subtitle: Text(
           term.notificationTime != null
@@ -34,7 +35,8 @@ class TermTile extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: Icon(Icons.info_outline),
+              tooltip: 'Select notification time',
+              icon: Icon(Icons.access_time),
               onPressed: () {
                 showDialog(
                   context: context,
@@ -49,10 +51,12 @@ class TermTile extends StatelessWidget {
               },
             ),
             IconButton(
+              tooltip: 'Toggle lock',
               icon: Icon(term.locked ? Icons.lock : Icons.lock_open),
               onPressed: () => onToggleLocked(term),
             ),
             IconButton(
+              tooltip: 'Delete',
               icon: Icon(Icons.delete_outline),
               onPressed: () {
                 if (term.locked) {

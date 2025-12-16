@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:news_tracker/presentation/screens/home/home_screen.dart';
-import 'package:news_tracker/presentation/screens/home/term_inputs_widget.dart';
+import 'package:news_tracker/presentation/screens/home/term_input_widget.dart';
 import 'package:news_tracker/presentation/screens/home/terms_list_widget.dart';
 import 'package:news_tracker/presentation/shared_widgets/app_bar.dart';
 
